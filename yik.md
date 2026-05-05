@@ -1,0 +1,9 @@
+#前言
+inshergorohlalgebra是自创的代数学（补药传载）
+要传载的人去frakddx@hotmail.com哼一声
+回复“允许传载”才去
+我有点菜，可以评评
+什么事都可以找frakddx@hotmail.com（骂人不行）
+本人QQ:3279831770
+有急事找QQ，邮箱少用
+感谢大佬评论，我会多多改进咪~
