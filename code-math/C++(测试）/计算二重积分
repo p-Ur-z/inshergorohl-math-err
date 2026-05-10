@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cmath>
+#include <functional>
+
+using namespace std;
+
+using Func = function<long double(long double, long double)>;
+
+// 一维 Simpson
+long double simpson1D(Func f, long double x,
+                     long double y1, long double y2) {
+    long double h = (y2 - y1) / 2.0L;
+    return (h / 3.0L) * (
+        f(x, y1) +
+        4.0L * f(x, y1 + h) +
+        f(x, y2)
+    );
+}
+
+// 二维 Simpson
+long double simpson2D(Func f,
+                      long double x1, long double x2,
+                      long double y1, long double y2) {
+    long double hx = (x2 - x1) / 2.0L;
+    long double hy = (y2 - y1) / 2.0L;
+
+    long double cx = (x1 + x2) / 2.0L;
+    long double cy = (y1 + y2) / 2.0L;
+
+    return (hx * hy / 9.0L) * (
+        f(x1, y1) + f(x1, y2) + f(x2, y1) + f(x2, y2) +
+        4.0L * (
+            f(x1, cy) + f(x2, cy) +
+            f(cx, y1) + f(cx, y2)
+        ) +
+        16.0L * f(cx, cy)
+    );
+}
+
+// 自适应二重积分
+long double adaptiveIntegrate(
+    Func f,
+    long double x1, long double x2,
+    long double y1, long double y2,
+    long double eps
+) {
+    long double whole = simpson2D(f, x1, x2, y1, y2);
+    long double xl = (x1 + x2) / 2.0L;
+    long double yl = (y1 + y2) / 2.0L;
+
+    long double q1 = simpson2D(f, x1, xl, y1, yl);
+    long double q2 = simpson2D(f, x1, xl, yl, y2);
+    long double q3 = simpson2D(f, xl, x2, y1, yl);
+    long double q4 = simpson2D(f, xl, x2, yl, y2);
+
+    long double split = q1 + q2 + q3 + q4;
+
+    if (fabsl(split - whole) < 15.0L * eps)
+        return split + (split - whole) / 15.0L;
+
+    return adaptiveIntegrate(f, x1, xl, y1, yl, eps / 4.0L) +
+           adaptiveIntegrate(f, x1, xl, yl, y2, eps / 4.0L) +
+           adaptiveIntegrate(f, xl, x2, y1, yl, eps / 4.0L) +
+           adaptiveIntegrate(f, xl, x2, yl, y2, eps / 4.0L);
+}
+
+int main() {
+    // 示例：∬ xy dxdy over [0,1]×[0,1]
+    Func f = [](long double x, long double y) {
+        return x * y;
+    };
+
+    long double result =
+        adaptiveIntegrate(f, 0.0L, 1.0L, 0.0L, 1.0L, 1e-12L);
+
+    cout.precision(15);
+    cout << "二重积分结果 = " << result << endl;
+    // 精确解应为 0.25
+    return 0;
+}
