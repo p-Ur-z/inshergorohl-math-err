@@ -1,169 +1,236 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8">
-<title>数学分析 · 积分计算器</title>
-<style>
-body {
-    font-family: "Segoe UI", sans-serif;
-    background: #f0f2f5;
-    padding: 20px;
-}
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-}
-button {
-    background: #4a6ee0;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-button:hover {
-    background: #3a5ecc;
-}
-pre {
-    background: #f7f7f7;
-    padding: 10px;
-    border-radius: 6px;
-    overflow-x: auto;
-    font-size: 13px;
-}
-h3 {
-    margin-top: 0;
-    color: #333;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>数学分析 · 积分计算器</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #4a6ee0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #3a5ecc;
+        }
+
+        pre {
+            background: #f7f7f7;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2 style="text-align:center;">数学分析 · 数值积分工具</h2>
+    <h2 style="text-align:center;">数学分析 · 数值积分工具</h2>
 
-<div class="container">
+    <div class="container">
 
-<!-- 定积分 -->
-<div class="card">
-    <h3>定积分 ∫ f(x) dx</h3>
-    <input id="f1" value="Math.sin(x)" placeholder="f(x)，如：x*x 或 Math.sin(x)">
-    <input id="a1" type="number" value="0" placeholder="下限 a">
-    <input id="b1" type="number" value="3.14159" placeholder="上限 b">
-    <input id="n1" type="number" value="100" placeholder="分割数 n">
-    <select id="method1">
-        <option value="left">黎曼和（左）</option>
-        <option value="mid">黎曼和（中点）</option>
-        <option value="right">黎曼和（右）</option>
-        <option value="simpson">抛物线法（Simpson）</option>
-    </select>
-    <button onclick="calc1()">计算定积分</button>
-    <pre id="r1">结果将显示在这里</pre>
-</div>
+        <!-- 定积分 -->
+        <div class="card">
+            <h3>定积分 ∫ f(x) dx</h3>
+            <input id="f1" value="Math.sin(x)" placeholder="f(x)，如：x*x 或 Math.sin(x)">
+            <input id="a1" type="number" value="0" placeholder="下限 a">
+            <input id="b1" type="number" value="3.14159" placeholder="上限 b">
+            <input id="n1" type="number" value="100" placeholder="分割数 n">
+            <select id="method1">
+                <option value="left">黎曼和（左）</option>
+                <option value="mid">黎曼和（中点）</option>
+                <option value="right">黎曼和（右）</option>
+                <option value="simpson">抛物线法（Simpson）</option>
+            </select>
+            <button onclick="calc1()">计算定积分</button>
+            <pre id="r1">结果将显示在这里</pre>
+        </div>
 
-<!-- 曲线积分 -->
-<div class="card">
-    <h3>曲线积分（弧长）</h3>
-    <input id="fx" value="Math.cos(t)" placeholder="x(t)">
-    <input id="fy" value="Math.sin(t)" placeholder="y(t)">
-    <input id="ta" type="number" value="0" placeholder="t 起点">
-    <input id="tb" type="number" value="6.28318" placeholder="t 终点">
-    <input id="n2" type="number" value="200" placeholder="分割数">
-    <button onclick="curve()">计算弧长</button>
-    <pre id="r2">结果将显示在这里</pre>
-</div>
+        <!-- 曲线积分 -->
+        <div class="card">
+            <h3>曲线积分（弧长）</h3>
+            <input id="fx" value="Math.cos(t)" placeholder="x(t)">
+            <input id="fy" value="Math.sin(t)" placeholder="y(t)">
+            <input id="ta" type="number" value="0" placeholder="t 起点">
+            <input id="tb" type="number" value="6.28318" placeholder="t 终点">
+            <input id="n2" type="number" value="200" placeholder="分割数">
+            <button onclick="curve()">计算弧长</button>
+            <pre id="r2">结果将显示在这里</pre>
+        </div>
 
-<!-- 二重积分 -->
-<div class="card">
-    <h3>二重积分 ∬ f(x,y) dxdy</h3>
-    <input id="f3" value="x*y" placeholder="f(x,y)，如：x*y">
-    <div style="display:flex;gap:10px;">
-        <input id="x1" type="number" value="0" placeholder="x 下限">
-        <input id="x2" type="number" value="1" placeholder="x 上限">
-        <input id="y1" type="number" value="0" placeholder="y 下限">
-        <input id="y2" type="number" value="1" placeholder="y 上限">
+        <!-- 二重积分 -->
+        <div class="card">
+            <h3>二重积分 ∬ f(x,y) dxdy</h3>
+            <input id="f3" value="x*y" placeholder="f(x,y)，如：x*y">
+            <div style="display:flex;gap:10px;">
+                <input id="x1" type="number" value="0" placeholder="x 下限">
+                <input id="x2" type="number" value="1" placeholder="x 上限">
+                <input id="y1" type="number" value="0" placeholder="y 下限">
+                <input id="y2" type="number" value="1" placeholder="y 上限">
+            </div>
+            <input id="n3" type="number" value="50" placeholder="分割数 n">
+            <button onclick="doubleInt()">计算二重积分</button>
+            <pre id="r3">结果将显示在这里</pre>
+        </div>
+
     </div>
-    <input id="n3" type="number" value="50" placeholder="分割数 n">
-    <button onclick="doubleInt()">计算二重积分</button>
-    <pre id="r3">结果将显示在这里</pre>
-</div>
 
-</div>
+    <script>
+        // 生成等差数列
+        const range = (a, b, n) => {
+            const h = (b - a) / n,
+                r = [];
 
-<script>
-const range = (a,b,n)=>{
-    const h=(b-a)/n, r=[];
-    for(let i=0;i<=n;i++) r.push(a+i*h);
-    return [h,r];
-};
+            for (let i = 0; i <= n; i++) {
+                r.push(a + i * h);
+            }
 
-function safeEval(fn, vars) {
-    try {
-        return new Function(...Object.keys(vars), `return ${fn}`)(...Object.values(vars));
-    } catch(e) {
-        alert("函数解析错误: " + e.message);
-        throw e;
-    }
-}
+            return [h, r];
+        };
 
-function calc1(){
-    const a=+a1.value, b=+b1.value, n=+n1.value;
-    const [h,xs]=range(a,b,n);
-    let s=0, m=method1.value;
-    const fn = f1.value;
-
-    if(m==="left") for(let i=0;i<n;i++) s+=safeEval(fn,{x:xs[i]})*h;
-    if(m==="right") for(let i=1;i<=n;i++) s+=safeEval(fn,{x:xs[i]})*h;
-    if(m==="mid") for(let i=0;i<n;i++) s+=safeEval(fn,{x:(xs[i]+xs[i+1])/2})*h;
-    if(m==="simpson"){
-        s=safeEval(fn,{x:a})+safeEval(fn,{x:b});
-        for(let i=1;i<n;i++) s+=safeEval(fn,{x:a+i*h})*(i%2?4:2);
-        s*=h/3;
-    }
-    r1.innerText = `结果 ≈ ${s}`;
-}
-
-function curve(){
-    const ta=+ta.value, tb=+tb.value, n=+n2.value;
-    const [h,ts]=range(ta,tb,n);
-    let len=0;
-    const fxv=fx.value, fyv=fy.value;
-    for(let i=0;i<n;i++){
-        let t1=ts[i], t2=ts[i+1];
-        let dx=safeEval(fxv,{t:t2})-safeEval(fxv,{t:t1});
-        let dy=safeEval(fyv,{t:t2})-safeEval(fyv,{t:t1});
-        len+=Math.sqrt(dx*dx+dy*dy);
-    }
-    r2.innerText = `弧长 ≈ ${len}`;
-}
-
-function doubleInt(){
-    const x1=+x1.value, x2=+x2.value, y1=+y1.value, y2=+y2.value, n=+n3.value;
-    const hx=(x2-x1)/n, hy=(y2-y1)/n;
-    let s=0;
-    const fn=f3.value;
-    for(let i=0;i<n;i++){
-        for(let j=0;j<n;j++){
-            let x=x1+(i+0.5)*hx, y=y1+(j+0.5)*hy;
-            s+=safeEval(fn,{x,y})*hx*hy;
+        // 安全地解析函数表达式
+        function safeEval(fn, vars) {
+            try {
+                return new Function(...Object.keys(vars), `return ${fn}`)(...Object.values(vars));
+            } catch (e) {
+                alert("函数解析错误: " + e.message);
+                throw e;
+            }
         }
-    }
-    r3.innerText = `二重积分 ≈ ${s}`;
-}
-</script>
+
+        // 模块 1
+        // 定积分计算
+        function calc1() {
+            const a = +a1.value,
+                b = +b1.value,
+                n = +n1.value;
+            const [h, xs] = range(a, b, n);
+
+            let s = 0,
+                m = method1.value;
+
+            const fn = f1.value;
+
+            if (m === "left") {
+                for (let i = 0; i < n; i++) {
+                    s += safeEval(fn, { x: xs[i] }) * h;
+                }
+            }
+
+            if (m === "right") {
+                for (let i = 1; i <= n; i++) {
+                    s += safeEval(fn, { x: xs[i] }) * h;
+                }
+            }
+
+            if (m === "mid") {
+                for (let i = 0; i < n; i++) {
+                    s += safeEval(fn, { x: (xs[i] + xs[i + 1]) / 2 }) * h;
+                }
+            }
+
+            if (m === "simpson") {
+                s = safeEval(fn, { x: a }) + safeEval(fn, { x: b });
+
+                for (let i = 1; i < n; i++) {
+                    s += safeEval(fn, { x: a + i * h }) * (i % 2 ? 4 : 2);
+                }
+
+                s *= h / 3;
+            }
+
+            r1.innerText = `结果 ≈ ${s}`;
+        }
+
+        // 模块 2
+        // 曲线积分计算
+        function curve() {
+            const taVal = +ta.value,
+                tbVal = +tb.value,
+                n = +n2.value;
+
+            const [h, ts] = range(taVal, tbVal, n);
+
+            let len = 0;
+
+            const fxv = fx.value,
+                fyv = fy.value;
+
+            for (let i = 0; i < n; i++) {
+                let t1 = ts[i], t2 = ts[i + 1];
+                let dx = safeEval(fxv, { t: t2 }) - safeEval(fxv, { t: t1 });
+                let dy = safeEval(fyv, { t: t2 }) - safeEval(fyv, { t: t1 });
+                len += Math.sqrt(dx * dx + dy * dy);
+            }
+            r2.innerText = `弧长 ≈ ${len}`;
+        }
+
+        // 模块 3
+        // 二重积分计算
+        function doubleInt() {
+            const x1Val = +x1.value,
+                x2Val = +x2.value,
+                y1Val = +y1.value,
+                y2Val = +y2.value,
+                n = +n3.value;
+
+            const hx = (x2Val - x1Val) / n,
+                hy = (y2Val - y1Val) / n;
+
+            let s = 0;
+
+            const fn = f3.value;
+
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    let x = x1Val + (i + 0.5) * hx, y = y1Val + (j + 0.5) * hy;
+                    s += safeEval(fn, { x, y }) * hx * hy;
+                }
+            }
+
+            r3.innerText = `二重积分 ≈ ${s}`;
+        }
+    </script>
 
 </body>
+
 </html>
