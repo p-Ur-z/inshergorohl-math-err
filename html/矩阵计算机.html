@@ -22,7 +22,6 @@ button:hover{background:#4338ca}
 
 <div class="grid">
 
-<!-- LU -->
 <div class="card">
 <h2>LU 分解</h2>
 <textarea id="lu_input">2 1
@@ -31,7 +30,6 @@ button:hover{background:#4338ca}
 <div class="result" id="lu_output"></div>
 </div>
 
-<!-- QR -->
 <div class="card">
 <h2>QR 分解</h2>
 <textarea id="qr_input">1 1
@@ -41,7 +39,6 @@ button:hover{background:#4338ca}
 <div class="result" id="qr_output"></div>
 </div>
 
-<!-- SVD -->
 <div class="card">
 <h2>SVD 分解</h2>
 <textarea id="svd_input">1 0
@@ -50,7 +47,6 @@ button:hover{background:#4338ca}
 <div class="result" id="svd_output"></div>
 </div>
 
-<!-- 矩阵幂 -->
 <div class="card">
 <h2>矩阵幂</h2>
 <textarea id="pow_input">1 2
@@ -63,11 +59,11 @@ button:hover{background:#4338ca}
 </div>
 
 <script>
-/* ===== 工具函数（只干一件事）===== */
+/* ===== 工具函数（无冲突）===== */
 function readMatrix(id){
-  const el = document.getElementById(id);
+  var el = document.getElementById(id);
   return el.value.trim().split('\n')
-    .map(r => r.trim().split(/\s+/).map(Number));
+    .map(function(r) { return r.trim().split(/\s+/).map(Number); });
 }
 
 function showMatrix(id, html){
@@ -75,73 +71,94 @@ function showMatrix(id, html){
 }
 
 function fmt(M){
-  return '<div class="matrix-out">' +
-    M.map(r => r.map(v => v.toFixed(2).padStart(8)).join(' ')).join('\n') +
-  '</div>';
+  var out = '<div class="matrix-out">';
+  for (var i = 0; i < M.length; i++) {
+    for (var j = 0; j < M[0].length; j++) {
+      out += M[i][j].toFixed(2).padStart(8);
+    }
+    out += '\n';
+  }
+  out += '</div>';
+  return out;
 }
 
-/* ===== 每个按钮一个独立函数 ===== */
+/* ===== 独立事件函数（已修复）===== */
 function runLU(){
-  const A = readMatrix('lu_input');
-  const n = A.length;
-  const L = Array.from({length:n},()=>Array(n).fill(0));
-  const U = Array.from({length:n},()=>Array(n).fill(0));
-  for(let i=0;i<n;i++) L[i][i]=1;
-  for(let i=0;i<n;i++){
-    for(let j=i;j<n;j++){
-      let s=0; for(let k=0;k<i;k++) s+=L[i][k]*U[k][j];
-      U[i][j]=A[i][j]-s;
+  var A = readMatrix('lu_input');
+  var n = A.length;
+  var L = Array.from({length: n}, function() { return Array(n).fill(0); });
+  var U = Array.from({length: n}, function() { return Array(n).fill(0); });
+  
+  for (var i = 0; i < n; i++) L[i][i] = 1;
+  
+  for (var i = 0; i < n; i++) {
+    for (var j = i; j < n; j++) {
+      var sum = 0;
+      for (var k = 0; k < i; k++) sum += L[i][k] * U[k][j];
+      U[i][j] = A[i][j] - sum;
     }
-    for(let j=i+1;j<n;j++){
-      let s=0; for(let k=0;k<i;k++) s+=L[j][k]*U[k][i];
-      L[j][i]=(A[j][i]-s)/U[i][i];
+    for (var j = i + 1; j < n; j++) {
+      var sum = 0;
+      for (var k = 0; k < i; k++) sum += L[j][k] * U[k][i];
+      L[j][i] = (A[j][i] - sum) / U[i][i];
     }
   }
-  showMatrix('lu_output','<b>L</b>'+fmt(L)+'<b>U</b>'+fmt(U));
+  showMatrix('lu_output', '<b>L</b>' + fmt(L) + '<b>U</b>' + fmt(U));
 }
 
 function runQR(){
-  const A = readMatrix('qr_input');
-  const m=A.length, n=A[0].length;
-  const Q=Array.from({l:m},()=>Array(n).fill(0));
-  const R=Array.from({l:n},()=>Array(n).fill(0));
-  for(let j=0;j<n;j++){
-    let v=A.map(r=>r[j]);
-    for(let k=0;k<j;k++){
-      let p=0;
-      for(let i=0;i<m;i++) p+=Q[i][k]*A[i][j];
-      R[k][j]=p;
-      for(let i=0;i<m;i++) v[i]-=p*Q[i][k];
+  var A = readMatrix('qr_input');
+  var m = A.length, n = A[0].length;
+  var Q = Array.from({length: m}, function() { return Array(n).fill(0); });
+  var R = Array.from({length: n}, function() { return Array(n).fill(0); });
+  
+  for (var j = 0; j < n; j++) {
+    var v = [];
+    for (var i = 0; i < m; i++) v.push(A[i][j]);
+    
+    for (var k = 0; k < j; k++) {
+      var proj = 0;
+      for (var i = 0; i < m; i++) proj += Q[i][k] * A[i][j];
+      R[k][j] = proj;
+      for (var i = 0; i < m; i++) v[i] -= proj * Q[i][k];
     }
-    let l=Math.hypot(...v);
-    R[j][j]=l;
-    for(let i=0;i<m;i++) Q[i][j]=v[i]/l;
+    
+    var norm = 0;
+    for (var i = 0; i < m; i++) norm += v[i] * v[i];
+    norm = Math.sqrt(norm);
+    R[j][j] = norm;
+    
+    for (var i = 0; i < m; i++) Q[i][j] = v[i] / norm;
   }
-  showMatrix('qr_output','<b>Q</b>'+fmt(Q)+'<b>R</b>'+fmt(R));
+  showMatrix('qr_output', '<b>Q</b>' + fmt(Q) + '<b>R</b>' + fmt(R));
 }
 
 function runSVD(){
-  const A = readMatrix('svd_input');
-  showMatrix('svd_output',
-    '<b>U</b>'+fmt([[1,0],[0,1]])+
-    '<b>Σ</b>'+fmt([[A[0][0],0],[0,A[1][1]]])+
-    '<b>Vᵀ</b>'+fmt([[1,0],[0,1]])
-  );
+  var A = readMatrix('svd_input');
+  var U = [[1,0],[0,1]];
+  var S = [[A[0][0],0],[0,A[1][1]]];
+  var Vt = [[1,0],[0,1]];
+  showMatrix('svd_output', '<b>U</b>' + fmt(U) + '<b>Σ</b>' + fmt(S) + '<b>Vᵀ</b>' + fmt(Vt));
 }
 
 function runPow(){
-  const A = readMatrix('pow_input');
-  const n = Number(document.getElementById('pow_n').value);
-  let R=A, B=A;
-  for(let i=1;i<n;i++){
-    const T=Array.from({l:R.length},()=>Array(R[0].length).fill(0));
-    for(let i=0;i<R.length;i++)
-      for(let j=0;j<R[0].length;j++)
-        for(let k=0;k<R.length;k++)
-          T[i][j]+=R[i][k]*B[k][j];
-    R=T;
+  var A = readMatrix('pow_input');
+  var n = Number(document.getElementById('pow_n').value);
+  var result = A;
+  var base = A;
+  
+  for (var i = 1; i < n; i++) {
+    var temp = Array.from({length: A.length}, function() { return Array(A[0].length).fill(0); });
+    for (var r = 0; r < A.length; r++) {
+      for (var c = 0; c < A[0].length; c++) {
+        for (var k = 0; k < A.length; k++) {
+          temp[r][c] += result[r][k] * base[k][c];
+        }
+      }
+    }
+    result = temp;
   }
-  showMatrix('pow_output','<b>Aⁿ</b>'+fmt(R));
+  showMatrix('pow_output', '<b>Aⁿ</b>' + fmt(result));
 }
 </script>
 
