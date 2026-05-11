@@ -2,117 +2,102 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>数学分析 · 积分估算器</title>
+<title>数学分析 · 积分估算</title>
 <style>
-body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
-    background: #f5f8ff;
-    color: #1e293b;
-    padding: 30px;
-}
-h1 {
-    text-align: center;
-    font-weight: 600;
-}
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 20px;
-    max-width: 1200px;
-    margin: auto;
-}
-.card {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,40,120,.06);
-}
-.card h2 {
-    margin-top: 0;
-    font-size: 16px;
-}
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 8px;
-    border: 1px solid #dbe5ff;
-    box-sizing: border-box;
-}
-button {
-    background: #3b82f6;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-button:hover {
-    background: #2563eb;
-}
-.result {
-    margin-top: 10px;
-    padding: 10px;
-    background: #f1f5f9;
-    border-radius: 8px;
-    font-size: 14px;
-}
+body { margin:0; padding:30px; background:#f5f8ff; font-family:system-ui; }
+.card { background:#fff; border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,40,120,.06); }
+input,select,button { width:100%; padding:10px; margin:6px 0; border-radius:8px; border:1px solid #dbe5ff; box-sizing:border-box; }
+button { background:#3b82f6; color:#fff; border:none; cursor:pointer; }
+button:hover { background:#2563eb; }
+.result { margin-top:10px; padding:10px; background:#f1f5f9; border-radius:8px; font-size:14px; }
 </style>
 </head>
 <body>
 
-<h1>数学分析 · 定积分算法全集</h1>
-
-<div class="container">
 <div class="card">
-<h2>∫ f(x) dx</h2>
+<h2>定积分 ∫ f(x) dx</h2>
 <input id="f" value="Math.sin(x)">
-<div style="display:flex;gap:10px;">
 <input id="a" value="0">
 <input id="b" value="3.14159">
-</div>
 <input id="n" value="200">
 <select id="m">
-<option value="left">左黎曼和</option>
-<option value="right">右黎曼和</option>
-<option value="mid">中点黎曼和</option>
-<option value="trapezoid">梯形法</option>
-<option value="simpson">抛物线法（Simpson）</option>
+    <option value="left">左黎曼和</option>
+    <option value="right">右黎曼和</option>
+    <option value="mid">中点黎曼和</option>
+    <option value="trapezoid">梯形法</option>
+    <option value="parabola">抛物线法（Simpson）</option>
 </select>
 <button onclick="calc()">计算</button>
 <div class="result" id="r"></div>
 </div>
+
+<div class="card">
+<h2>曲线积分</h2>
+<input id="cx" value="Math.cos(t)">
+<input id="cy" value="Math.sin(t)">
+<input id="t0" value="0">
+<input id="t1" value="6.28318">
+<input id="nc" value="400">
+<select id="ct">
+    <option value="I">I 类（标量）</option>
+    <option value="II">II 类（向量）</option>
+</select>
+<button onclick="calcC()">计算</button>
+<div class="result" id="rc"></div>
 </div>
 
 <script>
-const run = (expr, vars) =>
-    Function(...Object.keys(vars), `return ${expr}`)(...Object.values(vars));
+const run = (e,v)=>Function(...Object.keys(v),`return ${e}`)(...Object.values(v));
 
-function calc() {
-    const f = x => run(f.value, {x});
-    const a = +a.value, b = +b.value, n = +n.value;
-    const h = (b - a) / n;
-    let s = 0, m = m.value;
+function calc(){
+    const f=x=>run(f.value,{x});
+    const a=+a.value,b=+b.value,n=+n.value;
+    const h=(b-a)/n,m=m.value;
+    let s=0;
 
-    if (m === "left")
-        for (let i = 0; i < n; i++) s += f(a + i * h);
-    if (m === "right")
-        for (let i = 1; i <= n; i++) s += f(a + i * h);
-    if (m === "mid")
-        for (let i = 0; i < n; i++) s += f(a + (i + 0.5) * h);
-    if (m === "trapezoid") {
-        s = 0.5 * (f(a) + f(b));
-        for (let i = 1; i < n; i++) s += f(a + i * h);
-        s *= h;
+    if(m==="left"){
+        for(let i=0;i<n;i++) s+=f(a+i*h);
+        s*=h;
     }
-    if (m === "simpson") {
-        s = f(a) + f(b);
-        for (let i = 1; i < n; i++)
-            s += f(a + i * h) * (i % 2 ? 4 : 2);
-        s *= h / 3;
+    if(m==="right"){
+        for(let i=1;i<=n;i++) s+=f(a+i*h);
+        s*=h;
     }
+    if(m==="mid"){
+        for(let i=0;i<n;i++) s+=f(a+(i+0.5)*h);
+        s*=h;
+    }
+    if(m==="trapezoid"){
+        s=0.5*(f(a)+f(b));
+        for(let i=1;i<n;i++) s+=f(a+i*h);
+        s*=h;
+    }
+    if(m==="parabola"){
+        s=f(a)+f(b);
+        for(let i=1;i<n;i++)
+            s+=f(a+i*h)*(i%2?4:2);
+        s*=h/3;
+    }
+    r.innerText=s;
+}
 
-    if (m !== "trapezoid" && m !== "simpson") s *= h;
-    r.innerText = "结果 ≈ " + s;
+function calcC(){
+    const x=t=>run(cx.value,{t});
+    const y=t=>run(cy.value,{t});
+    const t0=+t0.value,t1=+t1.value,n=+nc.value;
+    const dt=(t1-t0)/n;
+    let s=0;
+
+    for(let i=0;i<n;i++){
+        const t=t0+i*dt;
+        const dx=x(t+dt)-x(t);
+        const dy=y(t+dt)-y(t);
+        if(ct.value==="I")
+            s+=Math.sqrt(dx*dx+dy*dy);
+        else
+            s+=x(t)*dy-y(t)*dx;
+    }
+    rc.innerText=s;
 }
 </script>
 
