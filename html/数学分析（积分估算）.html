@@ -1,99 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <title>数学分析（积分估算）</title>
 <style>
-:root {
-    --bg: #f0f4ff;
-    --card: #ffffff;
-    --primary: #4f46e5;
-    --text: #1e293b;
-    --radius: 16px;
-}
-body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
-    background: var(--bg);
-    padding: 40px 20px;
-}
-h1 {
-    text-align: center;
-    color: var(--text);
-    font-weight: 600;
-    margin-bottom: 40px;
-}
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 1280px;
-    margin: 0 auto;
-}
-@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
-
-.card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    border: 1px solid #eef2ff;
-}
-h2 {
-    margin: 0 0 16px;
-    font-size: 16px;
-    color: var(--text);
-}
-input, select {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    border: 1px solid #dbe5ff;
-    border-radius: 10px;
-    box-sizing: border-box;
-    font-size: 14px;
-    background: #fafbff;
-}
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 9999px;
-    background: var(--primary);
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-button:hover {
-    filter: brightness(1.1);
-}
-.result {
-    margin-top: 16px;
-    padding: 14px;
-    background: #f8faff;
-    border-radius: 12px;
-    font-size: 13px;
-    line-height: 1.6;
-    word-break: break-all;
-}
-.err {
-    color: #64748b;
-    font-size: 12px;
-    margin-top: 6px;
-}
+body{font-family:system-ui;background:#f0f4ff;padding:40px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:auto}
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid #eef2ff}
+h2{margin:0 0 16px;font-size:16px;color:#1e293b}
+input,select{width:100%;padding:10px 12px;margin-bottom:12px;border:1px solid #dbe5ff;border-radius:10px;box-sizing:border-box;font-size:14px;background:#fafbff}
+button{width:100%;padding:12px;border:none;border-radius:9999px;background:#4f46e5;color:#fff;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s}
+button:hover{filter:brightness(1.1)}
+.result{margin-top:16px;padding:14px;background:#f8faff;border-radius:12px;font-size:13px;word-break:break-all}
+.err{color:#64748b;font-size:12px;margin-top:6px}
 </style>
 </head>
 <body>
-
-<h1>数学分析 · 积分估算</h1>
-
+<h1 style="text-align:center;color:#1e293b;font-weight:600">数学分析 · 积分估算</h1>
 <div class="grid">
-
-<!-- 1. 定积分 -->
 <div class="card">
 <h2>定积分 ∫ f(x) dx</h2>
 <input id="f1" value="Math.sin(x)">
@@ -101,37 +27,33 @@ button:hover {
 <input id="b1" value="3.14159" placeholder="上限">
 <input id="n1" value="200" placeholder="分段数">
 <select id="m1">
-    <option value="left">左黎曼和</option>
-    <option value="right">右黎曼和</option>
-    <option value="mid">中点黎曼和</option>
-    <option value="trapezoid">梯形法</option>
-    <option value="parabola">抛物线法</option>
+<option value="left">左黎曼和</option>
+<option value="right">右黎曼和</option>
+<option value="mid">中点黎曼和</option>
+<option value="trapezoid">梯形法</option>
+<option value="parabola">抛物线法</option>
 </select>
 <button onclick="calc1()">计算</button>
 <div class="result" id="r1"></div>
 </div>
-
-<!-- 2. 二重积分 -->
 <div class="card">
 <h2>二重积分 ∬ f(x,y) dxdy</h2>
 <input id="f2" value="x*x+y*y">
-<div style="display:flex;gap:6px;">
+<div style="display:flex;gap:6px">
 <input id="x1" value="0"><input id="x2" value="1">
 <input id="y1" value="0"><input id="y2" value="1">
 </div>
 <input id="n2" value="60">
 <select id="m2">
-    <option value="left">左黎曼和</option>
-    <option value="right">右黎曼和</option>
-    <option value="mid">中点黎曼和</option>
-    <option value="trapezoid">梯形法</option>
-    <option value="parabola">抛物线法</option>
+<option value="left">左黎曼和</option>
+<option value="right">右黎曼和</option>
+<option value="mid">中点黎曼和</option>
+<option value="trapezoid">梯形法</option>
+<option value="parabola">抛物线法</option>
 </select>
 <button onclick="calc2()">计算</button>
 <div class="result" id="r2"></div>
 </div>
-
-<!-- 3. 曲线积分 -->
 <div class="card">
 <h2>曲线积分</h2>
 <input id="cx" value="Math.cos(t)">
@@ -140,82 +62,38 @@ button:hover {
 <input id="t1" value="6.28318">
 <input id="nc" value="400">
 <select id="ct">
-    <option value="I">I 类（标量）</option>
-    <option value="II">II 类（向量）</option>
+<option value="I">I 类（标量）</option>
+<option value="II">II 类（向量）</option>
 </select>
 <button onclick="calcC()">计算</button>
 <div class="result" id="rc"></div>
 </div>
-
-<!-- 4. 三重积分 -->
 <div class="card">
 <h2>三重积分 ∭ f(x,y,z) dxdydz</h2>
 <input id="f3" value="x+y+z">
-<div style="display:flex;gap:6px;flex-wrap:wrap;">
+<div style="display:flex;gap:6px;flex-wrap:wrap">
 <input id="tx0" value="0"><input id="tx1" value="1">
 <input id="ty0" value="0"><input id="ty1" value="1">
 <input id="tz0" value="0"><input id="tz1" value="1">
 </div>
 <input id="n3" value="40">
 <select id="m3">
-    <option value="left">左黎曼和</option>
-    <option value="right">右黎曼和</option>
-    <option value="mid">中点黎曼和</option>
-    <option value="trapezoid">梯形法</option>
-    <option value="parabola">抛物线法</option>
+<option value="left">左黎曼和</option>
+<option value="right">右黎曼和</option>
+<option value="mid">中点黎曼和</option>
+<option value="trapezoid">梯形法</option>
+<option value="parabola">抛物线法</option>
 </select>
 <button onclick="calc3()">计算</button>
 <div class="result" id="r3"></div>
 </div>
-
 </div>
-
 <script>
-const run = (e,v)=>Function(...Object.keys(v),`return ${e}`)(...Object.values(v));
-
-/* 定积分 */
-function calc1(){
-    const f=x=>run(f1.value,{x});
-    const a=+a1.value,b=+b1.value,n=+n1.value;
-    const h=(b-a)/n,m=m1.value;
-    let s=0, err="";
-    if(m==="left"){for(let i=0;i<n;i++)s+=f(a+i*h);s*=h;err="O(h)";}
-    if(m==="right"){for(let i=1;i<=n;i++)s+=f(a+i*h);s*=h;err="O(h)";}
-    if(m==="mid"){for(let i=0;i<n;i++)s+=f(a+(i+0.5)*h);s*=h;err="O(h²)";}
-    if(m==="trapezoid"){s=0.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);s*=h;err="O(h²)";}
-    if(m==="parabola"){s=f(a)+f(b);for(let i=1;i<n;i++)s+=f(a+i*h)*(i%2?4:2);s*=h/3;err="O(h⁴)";}
-    r1.innerHTML=`结果 ≈ <b>${s}</b><div class="err">误差阶：${err}</div>`;
-}
-
-/* 二重积分 */
-function calc2(){
-    const f=(x,y)=>run(f2.value,{x,y});
-    const [x1,x2,y1,y2,n]=[+x1.value,+x2.value,+y1.value,+y2.value,+n2.value];
-    const hx=(x2-x1)/n, hy=(y2-y1)/n; 
-    let s=0;
-    for(let i=0;i<n;i++)for(let j=0;j<n;j++)s+=f(x1+(i+0.5)*hx,y1+(j+0.5)*hy);
-    r2.innerText=`结果 ≈ ${s*hx*hy}`;
-}
-
-/* 曲线积分 */
-function calcC(){
-    const x=t=>run(cx.value,{t}),y=t=>run(cy.value,{t});
-    const [t0,t1,n]=[+t0.value,+t1.value,+nc.value];
-    const dt=(t1-t0)/n; let s=0;
-    for(let i=0;i<n;i++){ const t=t0+i*dt; const dx=x(t+dt)-x(t),dy=y(t+dt)-y(t); s+= ct.value==="I"?Math.hypot(dx,dy):x(t)*dy-y(t)*dx; }
-    rc.innerText=`结果 ≈ ${s}`;
-}
-
-/* 三重积分 */
-function calc3(){
-    const f=(x,y,z)=>run(f3.value,{x,y,z});
-    const [x0,x1,y0,y1,z0,z1,n]=[+tx0.value,+tx1.value,+ty0.value,+ty1.value,+tz0.value,+tz1.value,+n3.value];
-    const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n; 
-    let s=0;
-    for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++)s+=f(x0+(i+0.5)*hx,y0+(j+0.5)*hy,z0+(k+0.5)*hz);
-    r3.innerText=`结果 ≈ ${s*hx*hy*hz}`;
-}
+const run=(e,v)=>Function(...Object.keys(v),`return ${e}`)(...Object.values(v));
+function calc1(){const f=x=>run(f1.value,{x});const a=+a1.value,b=+b1.value,n=+n1.value,h=(b-a)/n,m=m1.value;let s=0,err="";if(m==="left"){for(let i=0;i<n;i++)s+=f(a+i*h);s*=h;err="O(h)"}if(m==="right"){for(let i=1;i<=n;i++)s+=f(a+i*h);s*=h;err="O(h)"}if(m==="mid"){for(let i=0;i<n;i++)s+=f(a+(i+0.5)*h);s*=h;err="O(h²)"}if(m==="trapezoid"){s=0.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);s*=h;err="O(h²)"}if(m==="parabola"){s=f(a)+f(b);for(let i=1;i<n;i++)s+=f(a+i*h)*(i%2?4:2);s*=h/3;err="O(h⁴)"}r1.innerHTML=`<b>${s}</b><div class="err">误差阶：${err}</div>`}
+function calc2(){const f=(x,y)=>run(f2.value,{x,y});const[x1,x2,y1,y2,n]=[+x1.value,+x2.value,+y1.value,+y2.value,+n2.value];const hx=(x2-x1)/n,hy=(y2-y1)/n;let s=0;for(let i=0;i<n;i++)for(let j=0;j<n;j++)s+=f(x1+(i+0.5)*hx,y1+(j+0.5)*hy);r2.innerText=`结果 ≈ ${s*hx*hy}`}
+function calcC(){const x=t=>run(cx.value,{t}),y=t=>run(cy.value,{t});const[t0,t1,n]=[+t0.value,+t1.value,+nc.value];const dt=(t1-t0)/n;let s=0;for(let i=0;i<n;i++){const t=t0+i*dt;const dx=x(t+dt)-x(t),dy=y(t+dt)-y(t);s+=ct.value==="I"?Math.hypot(dx,dy):x(t)*dy-y(t)*dx}rc.innerText=`结果 ≈ ${s}`}
+function calc3(){const f=(x,y,z)=>run(f3.value,{x,y,z});const[x0,x1,y0,y1,z0,z1,n]=[+tx0.value,+tx1.value,+ty0.value,+ty1.value,+tz0.value,+tz1.value,+n3.value];const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n;let s=0;for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++)s+=f(x0+(i+0.5)*hx,y0+(j+0.5)*hy,z0+(k+0.5)*hz);r3.innerText=`结果 ≈ ${s*hx*hy*hz}`}
 </script>
-
 </body>
 </html>
