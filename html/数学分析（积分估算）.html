@@ -19,8 +19,8 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
     gap: 20px;
-    max-width: 1400px;
-    margin: 20px auto;
+    max-width: 1200px;
+    margin: auto;
 }
 .card {
     background: #ffffff;
@@ -49,171 +49,70 @@ button {
 button:hover {
     background: #2563eb;
 }
-.row {
-    display: flex;
-    gap: 10px;
-}
 .result {
     margin-top: 10px;
     padding: 10px;
     background: #f1f5f9;
     border-radius: 8px;
     font-size: 14px;
-    word-break: break-all;
 }
 </style>
 </head>
 <body>
 
-<h1>数学分析 · 积分估算器</h1>
+<h1>数学分析 · 定积分算法全集</h1>
 
 <div class="container">
-
-<!-- 定积分 -->
 <div class="card">
-<h2>定积分 ∫ f(x) dx</h2>
-<input id="f1" value="Math.sin(x)">
-<div class="row"><input id="a1" value="0"><input id="b1" value="3.14159"></div>
-<input id="n1" value="200">
-<select id="m1">
-    <option value="simpson">抛物线法</option>
-    <option value="trapezoid">梯形法</option>
+<h2>∫ f(x) dx</h2>
+<input id="f" value="Math.sin(x)">
+<div style="display:flex;gap:10px;">
+<input id="a" value="0">
+<input id="b" value="3.14159">
+</div>
+<input id="n" value="200">
+<select id="m">
+<option value="left">左黎曼和</option>
+<option value="right">右黎曼和</option>
+<option value="mid">中点黎曼和</option>
+<option value="trapezoid">梯形法</option>
+<option value="simpson">抛物线法（Simpson）</option>
 </select>
-<button onclick="calc1()">计算</button>
-<div class="result" id="r1"></div>
+<button onclick="calc()">计算</button>
+<div class="result" id="r"></div>
 </div>
-
-<!-- 二重积分 -->
-<div class="card">
-<h2>二重积分 ∬ f(x,y) dxdy</h2>
-<input id="f2" value="x*y">
-<div class="row">
-    <input id="x1" value="0"><input id="x2" value="1">
-    <input id="y1" value="0"><input id="y2" value="1">
-</div>
-<input id="n2" value="120">
-<select id="m2">
-    <option value="simpson2d">Simpson</option>
-    <option value="trapezoid2d">梯形法</option>
-</select>
-<button onclick="calc2()">计算</button>
-<div class="result" id="r2"></div>
-</div>
-
-<!-- 曲线积分 -->
-<div class="card">
-<h2>曲线积分</h2>
-<input id="cx" value="Math.cos(t)">
-<input id="cy" value="Math.sin(t)">
-<input id="t0" value="0">
-<input id="t1" value="6.28318">
-<select id="ct">
-    <option value="I">I 类（标量）</option>
-    <option value="II">II 类（向量）</option>
-</select>
-<button onclick="calcC()">计算</button>
-<div class="result" id="rc"></div>
-</div>
-
-<!-- 三重积分 -->
-<div class="card">
-<h2>三重积分 ∭ f(x,y,z) dxdydz</h2>
-<input id="f3" value="x+y+z">
-<div class="row">
-    <input id="tx0" value="0"><input id="tx1" value="1">
-    <input id="ty0" value="0"><input id="ty1" value="1">
-    <input id="tz0" value="0"><input id="tz1" value="1">
-</div>
-<input id="n3" value="60">
-<button onclick="calc3()">计算</button>
-<div class="result" id="r3"></div>
-</div>
-
 </div>
 
 <script>
-const safe = (expr, vars={}) =>
+const run = (expr, vars) =>
     Function(...Object.keys(vars), `return ${expr}`)(...Object.values(vars));
 
-function riemann(f,a,b,n,m){
-    const h=(b-a)/n; let s=0;
-    if(m==='mid') for(let i=0;i<n;i++) s+=f(a+(i+.5)*h);
-    if(m==='left') for(let i=0;i<n;i++) s+=f(a+i*h);
-    if(m==='right') for(let i=1;i<=n;i++) s+=f(a+i*h);
-    return s*h;
-}
-function trapezoid(f,a,b,n){
-    const h=(b-a)/n;
-    let s=0.5*(f(a)+f(b));
-    for(let i=1;i<n;i++) s+=f(a+i*h);
-    return s*h;
-}
-function simpson(f,a,b,n){
-    const h=(b-a)/n;
-    let s=f(a)+f(b);
-    for(let i=1;i<n;i++) s+=f(a+i*h)*(i%2?4:2);
-    return s*h/3;
-}
+function calc() {
+    const f = x => run(f.value, {x});
+    const a = +a.value, b = +b.value, n = +n.value;
+    const h = (b - a) / n;
+    let s = 0, m = m.value;
 
-function calc1(){
-    const f=x=>safe(f1.value,{x});
-    const a=+a1.value,b=+b1.value,n=+n1.value;
-    const r=m1.value==='trapezoid'
-        ? trapezoid(f,a,b,n)
-        : simpson(f,a,b,n);
-    r1.innerText=r;
-}
-
-function calc2(){
-    const f=(x,y)=>safe(f2.value,{x,y});
-    const [x1,x2,y1,y2,n]=[+x1.value,+x2.value,+y1.value,+y2.value,+n2.value];
-    const hx=(x2-x1)/n, hy=(y2-y1)/n;
-    let s=0;
-    if(m2.value==='trapezoid2d'){
-        for(let i=0;i<=n;i++)
-        for(let j=0;j<=n;j++){
-            const w=((i&&i<n)?2:1)*((j&&j<n)?2:1);
-            s+=w*f(x1+i*hx,y1+j*hy);
-        }
-        s*=hx*hy/4;
-    }else{
-        for(let i=0;i<n;i++)
-        for(let j=0;j<n;j++){
-            const x=x1+(i+.5)*hx, y=y1+(j+.5)*hy;
-            s+=f(x,y);
-        }
-        s*=hx*hy;
+    if (m === "left")
+        for (let i = 0; i < n; i++) s += f(a + i * h);
+    if (m === "right")
+        for (let i = 1; i <= n; i++) s += f(a + i * h);
+    if (m === "mid")
+        for (let i = 0; i < n; i++) s += f(a + (i + 0.5) * h);
+    if (m === "trapezoid") {
+        s = 0.5 * (f(a) + f(b));
+        for (let i = 1; i < n; i++) s += f(a + i * h);
+        s *= h;
     }
-    r2.innerText=s;
-}
-
-function calcC(){
-    const x=t=>safe(cx.value,{t});
-    const y=t=>safe(cy.value,{t});
-    const [t0,t1,n]=[+t0.value,+t1.value,+t0.value*50];
-    const dt=(t1-t0)/n; let s=0;
-    for(let i=0;i<n;i++){
-        const t=t0+(i+.5)*dt;
-        if(ct.value==='I')
-            s+=Math.hypot(x(t+.001)-x(t),y(t+.001)-y(t))/dt;
-        else
-            s+=x(t)*(y(t+.001)-y(t))-y(t)*(x(t+.001)-x(t));
+    if (m === "simpson") {
+        s = f(a) + f(b);
+        for (let i = 1; i < n; i++)
+            s += f(a + i * h) * (i % 2 ? 4 : 2);
+        s *= h / 3;
     }
-    rc.innerText=s*dt;
-}
 
-function calc3(){
-    const f=(x,y,z)=>safe(f3.value,{x,y,z});
-    const [x0,x1,y0,y1,z0,z1,n]=
-        [+tx0.value,+tx1.value,+ty0.value,+ty1.value,+tz0.value,+tz1.value,+n3.value];
-    const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n;
-    let s=0;
-    for(let i=0;i<n;i++)
-    for(let j=0;j<n;j++)
-    for(let k=0;k<n;k++){
-        s+=f(x0+(i+.5)*hx,y0+(j+.5)*hy,z0+(k+.5)*hz);
-    }
-    r3.innerText=s*hx*hy*hz;
+    if (m !== "trapezoid" && m !== "simpson") s *= h;
+    r.innerText = "结果 ≈ " + s;
 }
 </script>
 
