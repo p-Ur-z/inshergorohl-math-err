@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Flux v1.3</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -15,7 +16,258 @@
     --text-sub: #5a6b82;
     --line: #d1d9e6;
     --gradient: linear-gradient(90deg, #3b82f6, #8b5cf6);
-
-    /* 工具四色 */
+    --warn-bg: #1a1a1a;
+    --warn-text: #f87171;
+    --warn-border: #dc2626;
     --blue: #3b82f6;
     --purple: #8b5cf6;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.warning-banner {
+    background-color: var(--warn-bg);
+    color: var(--warn-text);
+    padding: 10px 24px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    border-bottom: 1px solid var(--warn-border);
+    user-select: none;
+}
+
+.warning-banner span { margin: 0 8px; }
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--line);
+}
+
+.logo { display: flex; align-items: center; gap: 14px; }
+
+.logo-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: 1.5px solid var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 600 26px/1 'Inter', sans-serif;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--blue);
+    text-stroke: 1.5px var(--blue);
+    background: var(--card-bg);
+}
+
+.logo-text h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+.logo-text span { font-size: 13px; color: var(--text-sub); }
+
+.version {
+    font-size: 13px; font-weight: 500;
+    color: var(--blue);
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid #dbeafe;
+    background: #f0f9ff;
+}
+
+.section-title {
+    font-size: 14px; font-weight: 600;
+    color: var(--text-sub);
+    margin: 48px 0 20px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; }
+
+.card {
+    padding: 28px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--card-bg);
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.card:hover { border-color: #b0bccf; box-shadow: 0 8px 30px rgba(0, 40, 100, 0.08); }
+
+.card h2 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+.card p { font-size: 14px; color: var(--text-sub); margin-bottom: 24px; }
+
+.launch-btn {
+    display: block; text-align: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    color: #ffffff;
+    background: var(--gradient);
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.launch-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35); }
+
+.coming-soon {
+    display: block; text-align: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    color: var(--text-sub);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    cursor: not-allowed;
+}
+
+.tool-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1.5px solid;
+}
+
+.blue { color: var(--blue); border-color: #bfdbfe; background: #f0f9ff; }
+.purple { color: var(--purple); border-color: #ddd6fe; background: #f5f3ff; }
+.orange { color: var(--orange); border-color: #fed7aa; background: #fff7ed; }
+.teal { color: var(--teal); border-color: #99f6e4; background: #f0fdfa; }
+
+footer {
+    margin-top: 80px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--text-sub);
+    text-align: center;
+}
+
+@media (max-width: 640px) { header { flex-direction: column; align-items: flex-start; gap: 16px; } }
+</style>
+</head>
+
+<body>
+
+<div class="warning-banner">
+    ⚠️ SYSTEM NOTICE: <span>网站未开放</span> | <span>严禁入侵或扫描</span> | <span>All activities are logged.</span>
+</div>
+
+<div class="container">
+    <header>
+        <div class="logo">
+            <div class="logo-icon">F</div>
+            <div class="logo-text">
+                <h1>Flux</h1>
+                <span>Math Toolkit</span>
+            </div>
+        </div>
+        <div class="version">v1.3 正式版</div>
+    </header>
+
+    <div class="section-title">基础项目</div>
+    <main class="grid">
+        <div class="card">
+            <div class="tool-icon blue">∫</div>
+            <h2>Lik · 数值积分</h2>
+            <p>黎曼和估算，输入函数与区间，快速得到近似结果。</p>
+            <a href="lik.html" class="launch-btn">打开工具</a>
+        </div>
+        <div class="card">
+            <div class="tool-icon purple">[]</div>
+            <h2>Matrix · 线性代数</h2>
+            <p>行列式、逆矩阵、秩，告别繁琐手算。</p>
+            <a href="matrix.html" class="launch-btn">打开工具</a>
+        </div>
+        <div class="card">
+            <div class="tool-icon orange">Ω</div>
+            <h2>ldc · 蒙特卡洛积分</h2>
+            <p>圆、球、复杂区域积分，随机撒点法。</p>
+            <a href="idc.html" class="launch-btn">打开工具</a>
+        </div>
+    </main>
+
+    <div class="section-title">开发中（1.4 预告）</div>
+    <main class="grid">
+        <div class="card">
+            <div class="tool-icon teal">ℂ</div>
+            <h2>Complex · 复数计算</h2>
+            <p>支持复数的加减乘除、共轭、模长及极坐标转换。</p>
+            <div class="coming-soon">Coming Soon</div>
+        </div>
+    </main>
+
+    <footer>
+        © 2024 – 2026 p-Ur-z · Flux v1.3 · Pure HTML / CSS / JS
+    </footer>
+</div>
+
+<!-- ===== 点击计数与驱逐脚本（每分钟+1，初始32）===== -->
+<script>
+(function() {
+    const MAX_CLICKS = 50;
+    const BLOCKED_PAGE = 'blocked.html';
+    const CLICK_INTERVAL = 60000; // 1分钟（毫秒）
+    
+    // 初始化点击计数（从32开始）
+    let clickCount = parseInt(localStorage.getItem('flux_click_count'));
+    if (isNaN(clickCount)) {
+        clickCount = 32;
+        localStorage.setItem('flux_click_count', clickCount);
+    }
+    
+    // 初始化上次点击时间
+    let lastClickTime = parseInt(localStorage.getItem('flux_last_click_time')) || 0;
+    
+    // 如果已经被封禁，直接跳转
+    if (localStorage.getItem('flux_blocked') === 'true') {
+        window.location.href = BLOCKED_PAGE;
+        return;
+    }
+
+    // 监听点击事件
+    document.addEventListener('click', function() {
+        const currentTime = Date.now();
+        
+        // 检查距离上次点击是否超过1分钟
+        if (currentTime - lastClickTime >= CLICK_INTERVAL) {
+            clickCount++;
+            localStorage.setItem('flux_click_count', clickCount);
+            localStorage.setItem('flux_last_click_time', currentTime);
+            
+            console.log(`点击计数：${clickCount}`); // 调试用
+            
+            // 检查是否超限
+            if (clickCount > MAX_CLICKS) {
+                localStorage.setItem('flux_blocked', 'true');
+                alert('⚠️ 警告：检测到异常点击行为！\n您的访问已被阻断。');
+                window.location.href = BLOCKED_PAGE;
+            }
+        } else {
+            console.log('点击过于频繁，不计次'); // 调试用
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
