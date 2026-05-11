@@ -70,6 +70,13 @@ button:hover {
     font-family: monospace;
     white-space: pre;
 }
+.input-row {
+    display: flex;
+    gap: 10px;
+}
+.input-row textarea {
+    flex: 1;
+}
 </style>
 </head>
 <body>
@@ -78,6 +85,7 @@ button:hover {
 
 <div class="grid">
 
+<!-- LU 分解 -->
 <div class="card">
 <h2>LU 分解</h2>
 <textarea id="lu_input">2 1
@@ -86,6 +94,7 @@ button:hover {
 <div id="lu_result" class="result"></div>
 </div>
 
+<!-- QR 分解 -->
 <div class="card">
 <h2>QR 分解</h2>
 <textarea id="qr_input">1 1
@@ -95,6 +104,7 @@ button:hover {
 <div id="qr_result" class="result"></div>
 </div>
 
+<!-- SVD 分解 -->
 <div class="card">
 <h2>SVD 分解</h2>
 <textarea id="svd_input">1 0
@@ -103,6 +113,7 @@ button:hover {
 <div id="svd_result" class="result"></div>
 </div>
 
+<!-- 矩阵幂 -->
 <div class="card">
 <h2>矩阵幂</h2>
 <textarea id="pow_input">1 2
@@ -110,6 +121,28 @@ button:hover {
 <input id="pow_n" type="number" value="2" style="width:100%; padding:10px; margin-bottom:10px; border-radius:10px; border:2px solid #dbe5ff;">
 <button onclick="calcPow()">计算 Aⁿ</button>
 <div id="pow_result" class="result"></div>
+</div>
+
+<!-- 行列式 -->
+<div class="card">
+<h2>行列式</h2>
+<textarea id="det_input">1 2
+3 4</textarea>
+<button onclick="calcDet()">计算行列式</button>
+<div id="det_result" class="result"></div>
+</div>
+
+<!-- 矩阵乘法 -->
+<div class="card">
+<h2>矩阵乘法</h2>
+<div class="input-row">
+<textarea id="matA">1 2
+3 4</textarea>
+<textarea id="matB">5 6
+7 8</textarea>
+</div>
+<button onclick="calcMul()">计算 A × B</button>
+<div id="mul_result" class="result"></div>
 </div>
 
 </div>
@@ -156,7 +189,6 @@ function calcLU() {
     var n = A.length;
     var L = [];
     var U = [];
-
     for (var i = 0; i < n; i++) {
         L[i] = [];
         U[i] = [];
@@ -166,7 +198,6 @@ function calcLU() {
         }
         L[i][i] = 1;
     }
-
     for (var i = 0; i < n; i++) {
         for (var j = i; j < n; j++) {
             var sum = 0;
@@ -183,9 +214,7 @@ function calcLU() {
             L[j][i] = (A[j][i] - sum) / U[i][i];
         }
     }
-
-    var out = "L =\n" + printMatrix(L) + "\nU =\n" + printMatrix(U);
-    document.getElementById("lu_result").innerHTML = out;
+    document.getElementById("lu_result").innerHTML = "L =\n" + printMatrix(L) + "\nU =\n" + printMatrix(U);
 }
 
 // QR 分解
@@ -195,7 +224,6 @@ function calcQR() {
     var n = A[0].length;
     var Q = [];
     var R = [];
-
     for (var i = 0; i < m; i++) {
         Q[i] = [];
         for (var j = 0; j < n; j++) {
@@ -208,7 +236,6 @@ function calcQR() {
             R[i][j] = 0;
         }
     }
-
     for (var j = 0; j < n; j++) {
         var v = [];
         for (var i = 0; i < m; i++) {
@@ -234,9 +261,7 @@ function calcQR() {
             Q[i][j] = v[i] / norm;
         }
     }
-
-    var out = "Q =\n" + printMatrix(Q) + "\nR =\n" + printMatrix(R);
-    document.getElementById("qr_result").innerHTML = out;
+    document.getElementById("qr_result").innerHTML = "Q =\n" + printMatrix(Q) + "\nR =\n" + printMatrix(R);
 }
 
 // SVD 分解
@@ -252,23 +277,63 @@ function calcSVD() {
 function calcPow() {
     var A = getMatrix("pow_input");
     var n = parseInt(document.getElementById("pow_n").value);
-    var res = A;
+    var result = A;
     var base = A;
-
-    for (var p = 1; p < n; p++) {
-        var tmp = [[0,0],[0,0]];
-        for (var i = 0; i < 2; i++) {
-            for (var j = 0; j < 2; j++) {
+    for (var i = 1; i < n; i++) {
+        var temp = [[0,0],[0,0]];
+        for (var r = 0; r < 2; r++) {
+            for (var c = 0; c < 2; c++) {
                 for (var k = 0; k < 2; k++) {
-                    tmp[i][j] += res[i][k] * base[k][j];
+                    temp[r][c] += result[r][k] * base[k][c];
                 }
             }
         }
-        res = tmp;
+        result = temp;
     }
+    document.getElementById("pow_result").innerHTML = "Aⁿ =\n" + printMatrix(result);
+}
 
-    var out = "Aⁿ =\n" + printMatrix(res);
-    document.getElementById("pow_result").innerHTML = out;
+// 行列式
+function calcDet() {
+    var A = getMatrix("det_input");
+    var n = A.length;
+    var det = 0;
+    if (n === 2) {
+        det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+    } else if (n === 3) {
+        det = A[0][0] * (A[1][1] * A[2][2] - A[1][2] * A[2][1])
+            - A[0][1] * (A[1][0] * A[2][2] - A[1][2] * A[2][0])
+            + A[0][2] * (A[1][0] * A[2][1] - A[1][1] * A[2][0]);
+    } else {
+        document.getElementById("det_result").innerHTML = "暂不支持 " + n + "×" + n + " 行列式";
+        return;
+    }
+    document.getElementById("det_result").innerHTML = "行列式 = " + det.toFixed(4);
+}
+
+// 矩阵乘法
+function calcMul() {
+    var A = getMatrix("matA");
+    var B = getMatrix("matB");
+    var rowsA = A.length;
+    var colsA = A[0].length;
+    var rowsB = B.length;
+    var colsB = B[0].length;
+    if (colsA !== rowsB) {
+        document.getElementById("mul_result").innerHTML = "错误：矩阵维度不匹配";
+        return;
+    }
+    var C = [];
+    for (var i = 0; i < rowsA; i++) {
+        C[i] = [];
+        for (var j = 0; j < colsB; j++) {
+            C[i][j] = 0;
+            for (var k = 0; k < colsA; k++) {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    document.getElementById("mul_result").innerHTML = "A × B =\n" + printMatrix(C);
 }
 </script>
 
