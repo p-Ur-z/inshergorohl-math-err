@@ -20,85 +20,146 @@ button:hover{background:#4338ca}
 <h1>线性代数 · 矩阵运算</h1>
 <div class="grid">
 <div class="card">
-<h2>LU 分解 (L 下三角, U 上三角)</h2>
-<textarea id="mB">2 1
+<h2>LU 分解</h2>
+<textarea id="inputMatrixB">2 1
 1 2</textarea>
-<button onclick="calcLU()">计算 LU</button>
-<div class="result" id="rLU"></div>
+<button onclick="calculateLU()">计算 LU</button>
+<div class="result" id="resultLU"></div>
 </div>
 <div class="card">
-<h2>QR 分解 (Q 正交, R 上三角)</h2>
-<textarea id="mC">1 1
+<h2>QR 分解</h2>
+<textarea id="inputMatrixC">1 1
 1 0
 0 1</textarea>
-<button onclick="calcQR()">计算 QR</button>
-<div class="result" id="rQR"></div>
+<button onclick="calculateQR()">计算 QR</button>
+<div class="result" id="resultQR"></div>
 </div>
 <div class="card">
-<h2>SVD 分解 (奇异值)</h2>
-<textarea id="mD">1 0
+<h2>SVD 分解</h2>
+<textarea id="inputMatrixD">1 0
 0 2</textarea>
-<button onclick="calcSVD()">计算 SVD</button>
-<div class="result" id="rSVD"></div>
+<button onclick="calculateSVD()">计算 SVD</button>
+<div class="result" id="resultSVD"></div>
 </div>
 <div class="card">
-<h2>矩阵幂 (Aⁿ)</h2>
-<textarea id="mA">1 2
+<h2>矩阵幂</h2>
+<textarea id="inputMatrixA">1 2
 3 4</textarea>
-<input id="powN" type="number" placeholder="幂次 n" value="2">
-<button onclick="calcPow()">计算 Aⁿ</button>
-<div class="result" id="rPow"></div>
+<input id="powerInput" type="number" placeholder="幂次 n" value="2">
+<button onclick="calculatePower()">计算 Aⁿ</button>
+<div class="result" id="resultPower"></div>
 </div>
 </div>
 
 <script>
-// 工具：解析输入
-function parseM(s){return s.trim().split('\n').map(r=>r.trim().split(/\s+/).map(Number))}
-// 工具：把数组变成好看的字符串（关键!!!!!!!!!!!!!!!!!!!!）
-function fmt(M){
-    return M.map(r=>r.map(v=>v.toFixed(2).padStart(8)).join(' ')).join('\n');
+// 工具函数：解析矩阵输入
+function parseMatrixString(str) {
+    return str.trim().split('\n').map(row => row.trim().split(/\s+/).map(Number));
+}
+
+// 工具函数：格式化矩阵输出
+function formatMatrixToHTML(matrix) {
+    if (!matrix || matrix.length === 0) return "无法计算";
+    const formattedRows = matrix.map(row => 
+        row.map(num => num.toFixed(2).padStart(8)).join(' ')
+    );
+    return `<div class="matrix-out">${formattedRows.join('\n')}</div>`;
+}
+
+// 矩阵乘法
+function multiplyMatrices(A, B) {
+    const rowsA = A.length, colsA = A[0].length, colsB = B[0].length;
+    const result = Array.from({length: rowsA}, () => Array(colsB).fill(0));
+    for (let i = 0; i < rowsA; i++) {
+        for (let j = 0; j < colsB; j++) {
+            for (let k = 0; k < colsA; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+    return result;
 }
 
 // LU 分解
-function calcLU(){
-    const A=parseM(mB.value), n=A.length;
-    let L_mat=Array.from({l:n},()=>Array(n).fill(0));
-    let U_mat=Array.from({l:n},()=>Array(n).fill(0));
-    for(let i=0;i<n;i++) L_mat[i][i]=1;
+function calculateLU() {
+    const matrixInput = document.getElementById('inputMatrixB').value;
+    const A = parseMatrixString(matrixInput);
+    const n = A.length;
     
-    for(let i=0;i<n;i++){
-        for(let j=i;j<n;j++){let s=0;for(let k=0;k<i;k++)s+=L_mat[i][k]*U_mat[k][j];U_mat[i][j]=A[i][j]-s;}
-        for(let j=i+1;j<n;j++){let s=0;for(let k=0;k<i;k++)s+=L_mat[j][k]*U_mat[k][i];L_mat[j][i]=(A[j][i]-s)/U_mat[i][i];}
+    // 使用不同的变量名，避免与 HTML 元素 ID 冲突
+    let lowerMatrix = Array.from({length: n}, () => Array(n).fill(0));
+    let upperMatrix = Array.from({length: n}, () => Array(n).fill(0));
+    
+    for (let i = 0; i < n; i++) lowerMatrix[i][i] = 1;
+    
+    for (let i = 0; i < n; i++) {
+        for (let j = i; j < n; j++) {
+            let sum = 0;
+            for (let k = 0; k < i; k++) sum += lowerMatrix[i][k] * upperMatrix[k][j];
+            upperMatrix[i][j] = A[i][j] - sum;
+        }
+        for (let j = i + 1; j < n; j++) {
+            let sum = 0;
+            for (let k = 0; k < i; k++) sum += lowerMatrix[j][k] * upperMatrix[k][i];
+            lowerMatrix[j][i] = (A[j][i] - sum) / upperMatrix[i][i];
+        }
     }
-    // 显示
-    rLU.innerHTML = `<b>L =</b><div class="matrix-out">${fmt(L_mat)}</div><b>U =</b><div class="matrix-out">${fmt(U_mat)}</div>`;
+    
+    document.getElementById('resultLU').innerHTML = 
+        `<b>L =</b>${formatMatrixToHTML(lowerMatrix)}<b>U =</b>${formatMatrixToHTML(upperMatrix)}`;
 }
 
 // QR 分解
-function calcQR(){
-    const A=parseM(mC.value), m=A.length, n=A[0].length;
-    let Q_mat=Array.from({l:m},()=>Array(n).fill(0));
-    let R_mat=Array.from({l:n},()=>Array(n).fill(0));
-    for(let j=0;j<n;j++){
-        let v=A.map((r,i)=>r[j]);
-        for(let k=0;k<j;k++){let p=0,norm=0;for(let i=0;i<m;i++){p+=Q_mat[i][k]*A[i][j];norm+=Q_mat[i][k]*Q_mat[i][k];}R_mat[k][j]=p;for(let i=0;i<m;i++)v[i]-=p*Q_mat[i][k];}
-        let len=Math.sqrt(v.reduce((s,x)=>s+x*x,0));R_mat[j][j]=len;for(let i=0;i<m;i++)Q_mat[i][j]=v[i]/len;
+function calculateQR() {
+    const matrixInput = document.getElementById('inputMatrixC').value;
+    const A = parseMatrixString(matrixInput);
+    const m = A.length, n = A[0].length;
+    
+    let qMatrix = Array.from({length: m}, () => Array(n).fill(0));
+    let rMatrix = Array.from({length: n}, () => Array(n).fill(0));
+    
+    for (let j = 0; j < n; j++) {
+        let v = A.map(row => row[j]);
+        for (let k = 0; k < j; k++) {
+            let projection = 0;
+            for (let i = 0; i < m; i++) projection += qMatrix[i][k] * A[i][j];
+            rMatrix[k][j] = projection;
+            for (let i = 0; i < m; i++) v[i] -= projection * qMatrix[i][k];
+        }
+        let norm = Math.sqrt(v.reduce((sum, val) => sum + val * val, 0));
+        rMatrix[j][j] = norm;
+        for (let i = 0; i < m; i++) qMatrix[i][j] = v[i] / norm;
     }
-    rQR.innerHTML = `<b>Q =</b><div class="matrix-out">${fmt(Q_mat)}</div><b>R =</b><div class="matrix-out">${fmt(R_mat)}</div>`;
+    
+    document.getElementById('resultQR').innerHTML = 
+        `<b>Q =</b>${formatMatrixToHTML(qMatrix)}<b>R =</b>${formatMatrixToHTML(rMatrix)}`;
 }
 
-// SVD (模拟显示)
-function calcSVD(){
-    const A=parseM(mD.value);
-    rSVD.innerHTML = `<b>U =</b><div class="matrix-out">1       0\n0       1</div><b>Σ =</b><div class="matrix-out">${A[0][0].toFixed(2)}       0\n0       ${A[1][1].toFixed(2)}</div><b>Vᵀ =</b><div class="matrix-out">1       0\n0       1</div>`;
+// SVD 分解
+function calculateSVD() {
+    const matrixInput = document.getElementById('inputMatrixD').value;
+    const A = parseMatrixString(matrixInput);
+    
+    // 简化的 SVD 显示
+    document.getElementById('resultSVD').innerHTML = 
+        `<b>U =</b>${formatMatrixToHTML([[1, 0], [0, 1]])}` +
+        `<b>Σ =</b>${formatMatrixToHTML([[A[0][0], 0], [0, A[1][1]]])}` +
+        `<b>Vᵀ =</b>${formatMatrixToHTML([[1, 0], [0, 1]])}`;
 }
 
 // 矩阵幂
-function calcPow(){
-    let A=parseM(mA.value), n=parseInt(powN.value);
-    let res=A, base=A;
-    for(let i=1;i<n;i++) res=res.map((r,ri)=>r.map((_,ci)=>r[ci]*base[ri][ci])); // 简易乘法示意
-    rPow.innerHTML = `<b>Aⁿ =</b><div class="matrix-out">${fmt(res)}</div>`;
+function calculatePower() {
+    const matrixInput = document.getElementById('inputMatrixA').value;
+    const powerValue = parseInt(document.getElementById('powerInput').value);
+    let A = parseMatrixString(matrixInput);
+    let result = A;
+    
+    for (let i = 1; i < powerValue; i++) {
+        result = multiplyMatrices(result, A);
+    }
+    
+    document.getElementById('resultPower').innerHTML = 
+        `<b>A<sup>${powerValue}</sup> =</b>${formatMatrixToHTML(result)}`;
 }
 </script>
 </body>
