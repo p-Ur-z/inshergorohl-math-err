@@ -4,68 +4,87 @@
 <meta charset="UTF-8">
 <title>数学分析（积分估算）</title>
 <style>
+:root {
+    --bg: #f0f4ff;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --primary: #4f46e5;
+    --text: #1e293b;
+    --radius: 16px;
+}
 body {
-    font-family: sans-serif;
-    padding: 20px;
-    background: #f8fafc;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont;
+    background: var(--bg);
+    margin: 0;
+    padding: 40px 20px;
 }
 h1 {
     text-align: center;
-    color: #1e293b;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 40px;
 }
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
 }
-@media (max-width: 960px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 640px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-}
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
 .card {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border: 1px solid rgba(255,255,255,0.6);
 }
 h2 {
-    margin-top: 0;
+    margin: 0 0 16px;
     font-size: 16px;
-    color: #1e293b;
+    color: var(--text);
 }
 input, select {
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
     width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid #e0e7ff;
+    border-radius: 10px;
     box-sizing: border-box;
+    background: #fff;
+    font-size: 14px;
 }
 button {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
     width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 9999px; /* 胶囊按钮 */
+    background: var(--primary);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+button:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
 }
 .result {
-    margin-top: 15px;
-    padding: 10px;
-    background: #f1f5f9;
-    border-radius: 4px;
-    font-size: 14px;
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
     word-break: break-all;
+}
+.err {
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 6px;
 }
 </style>
 </head>
@@ -79,8 +98,8 @@ button {
 <div class="card">
 <h2>定积分 ∫ f(x) dx</h2>
 <input id="f1" value="Math.sin(x)">
-<input id="a1" value="0" placeholder="下限">
-<input id="b1" value="3.14159" placeholder="上限">
+<input id="a1" value="0">
+<input id="b1" value="3.14159">
 <input id="n1" value="200">
 <select id="m1">
     <option value="left">左黎曼和</option>
@@ -97,7 +116,7 @@ button {
 <div class="card">
 <h2>二重积分 ∬ f(x,y) dxdy</h2>
 <input id="f2" value="x*x+y*y">
-<div style="display:flex;gap:5px;">
+<div style="display:flex;gap:6px;">
 <input id="x1" value="0"><input id="x2" value="1">
 <input id="y1" value="0"><input id="y2" value="1">
 </div>
@@ -133,7 +152,7 @@ button {
 <div class="card">
 <h2>三重积分 ∭ f(x,y,z) dxdydz</h2>
 <input id="f3" value="x+y+z">
-<div style="display:flex;gap:5px;flex-wrap:wrap;">
+<div style="display:flex;gap:6px;flex-wrap:wrap;">
 <input id="tx0" value="0"><input id="tx1" value="1">
 <input id="ty0" value="0"><input id="ty1" value="1">
 <input id="tz0" value="0"><input id="tz1" value="1">
@@ -155,21 +174,43 @@ button {
 <script>
 const run = (e,v)=>Function(...Object.keys(v),`return ${e}`)(...Object.values(v));
 
-/* 通用 1D */
-function integrate1D(f,a,b,n,m){
-    const h=(b-a)/n; let s=0;
-    if(m==="left"){for(let i=0;i<n;i++)s+=f(a+i*h);s*=h;}
-    if(m==="right"){for(let i=1;i<=n;i++)s+=f(a+i*h);s*=h;}
-    if(m==="mid"){for(let i=0;i<n;i++)s+=f(a+(i+0.5)*h);s*=h;}
-    if(m==="trapezoid"){s=0.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);s*=h;}
-    if(m==="parabola"){s=f(a)+f(b);for(let i=1;i<n;i++)s+=f(a+i*h)*(i%2?4:2);s*=h/3;}
-    return s;
+function calc1(){
+    const f=x=>run(f1.value,{x});
+    const a=+a1.value,b=+b1.value,n=+n1.value;
+    const h=(b-a)/n,m=m1.value;
+    let s=0, err="";
+
+    if(m==="left"){for(let i=0;i<n;i++)s+=f(a+i*h);s*=h;err="O(h)";}
+    if(m==="right"){for(let i=1;i<=n;i++)s+=f(a+i*h);s*=h;err="O(h)";}
+    if(m==="mid"){for(let i=0;i<n;i++)s+=f(a+(i+0.5)*h);s*=h;err="O(h²)";}
+    if(m==="trapezoid"){s=0.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);s*=h;err="O(h²)";}
+    if(m==="parabola"){s=f(a)+f(b);for(let i=1;i<n;i++)s+=f(a+i*h)*(i%2?4:2);s*=h/3;err="O(h⁴)";}
+    r1.innerHTML=`结果 ≈ <b>${s}</b><div class="err">误差阶：${err}</div>`;
 }
 
-function calc1(){ const f=x=>run(f1.value,{x}); r1.innerText=integrate1D(f,+a1.value,+b1.value,+n1.value,m1.value); }
-function calc2(){ const f=(x,y)=>run(f2.value,{x,y}); const [x1,x2,y1,y2,n]=[+x1.value,+x2.value,+y1.value,+y2.value,+n2.value]; const hx=(x2-x1)/n,hy=(y2-y1)/n; let s=0; for(let i=0;i<n;i++)for(let j=0;j<n;j++)s+=f(x1+(i+0.5)*hx,y1+(j+0.5)*hy); r2.innerText=s*hx*hy; }
-function calcC(){ const x=t=>run(cx.value,{t}),y=t=>run(cy.value,{t}); const [t0,t1,n]=[+t0.value,+t1.value,+nc.value]; const dt=(t1-t0)/n; let s=0; for(let i=0;i<n;i++){ const t=t0+i*dt; const dx=x(t+dt)-x(t),dy=y(t+dt)-y(t); s+= ct.value==="I"?Math.hypot(dx,dy):x(t)*dy-y(t)*dx; } rc.innerText=s; }
-function calc3(){ const f=(x,y,z)=>run(f3.value,{x,y,z}); const [x0,x1,y0,y1,z0,z1,n]=[+tx0.value,+tx1.value,+ty0.value,+ty1.value,+tz0.value,+tz1.value,+n3.value]; const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n; let s=0; for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++)s+=f(x0+(i+0.5)*hx,y0+(j+0.5)*hy,z0+(k+0.5)*hz); r3.innerText=s*hx*hy*hz; }
+function calc2(){
+    const f=(x,y)=>run(f2.value,{x,y});
+    const [x1,x2,y1,y2,n]=[+x1.value,+x2.value,+y1.value,+y2.value,+n2.value];
+    const hx=(x2-x1)/n, hy=(y2-y1)/n; 
+    let s=0;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++)s+=f(x1+(i+0.5)*hx,y1+(j+0.5)*hy);
+    r2.innerText=`结果 ≈ ${s*hx*hy}`;
+}
+function calcC(){
+    const x=t=>run(cx.value,{t}),y=t=>run(cy.value,{t});
+    const [t0,t1,n]=[+t0.value,+t1.value,+nc.value];
+    const dt=(t1-t0)/n; let s=0;
+    for(let i=0;i<n;i++){ const t=t0+i*dt; const dx=x(t+dt)-x(t),dy=y(t+dt)-y(t); s+= ct.value==="I"?Math.hypot(dx,dy):x(t)*dy-y(t)*dx; }
+    rc.innerText=`结果 ≈ ${s}`;
+}
+function calc3(){
+    const f=(x,y,z)=>run(f3.value,{x,y,z});
+    const [x0,x1,y0,y1,z0,z1,n]=[+tx0.value,+tx1.value,+ty0.value,+ty1.value,+tz0.value,+tz1.value,+n3.value];
+    const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n; 
+    let s=0;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++)s+=f(x0+(i+0.5)*hx,y0+(j+0.5)*hy,z0+(k+0.5)*hz);
+    r3.innerText=`结果 ≈ ${s*hx*hy*hz}`;
+}
 </script>
 
 </body>
