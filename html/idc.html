@@ -12,7 +12,7 @@ input, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-b
 button { width: 100%; margin-top: 18px; padding: 12px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; }
 button:hover { background: #1669d6; }
 pre { background: #222; color: #0f0; padding: 12px; margin-top: 15px; border-radius: 4px; overflow-x: auto; }
-.back-btn { background: #1a73e8; text-align: center; color: #fff; padding: 12px; border-radius: 4px; cursor: pointer; margin-top: 20px; display: block; text-decoration: none; }
+.back-btn { width: 100%; margin-top: 18px; padding: 12px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; text-align: center; text-decoration: none; display: block; }
 .back-btn:hover { background: #1669d6; }
 </style>
 </head>
@@ -40,7 +40,7 @@ pre { background: #222; color: #0f0; padding: 12px; margin-top: 15px; border-rad
     <input id="z1" value="1">
     <button onclick="compute()">开始计算</button>
     <pre id="output"></pre>
-    <a href="index.html" class="back-btn">返回主界面</a>
+    <button class="back-btn" onclick="location.href='index.html'">返回主界面</button>
 </div>
 <script>
 function compute() {
