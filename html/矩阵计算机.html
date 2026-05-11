@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>线性代数 · 矩阵运算</title>
 <style>
-/* 完全复刻你积分计算器的风格 */
 body{margin:0;padding:40px;background:#f0f4ff;font-family:Arial,sans-serif}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1000px;margin:0 auto}
 .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e8ff}
@@ -55,7 +54,7 @@ button:hover{background:#4338ca}
 <script>
 // 工具：解析输入
 function parseM(s){return s.trim().split('\n').map(r=>r.trim().split(/\s+/).map(Number))}
-// 工具：把数组变成好看的字符串（关键！）
+// 工具：把数组变成好看的字符串（关键!!!!!!!!!!!!!!!!!!!!）
 function fmt(M){
     return M.map(r=>r.map(v=>v.toFixed(2).padStart(8)).join(' ')).join('\n');
 }
