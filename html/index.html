@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>数学工具箱</title>
+<style>
+body {
+  margin: 0;
+  padding: 40px;
+  background: #f0f4ff;
+  font-family: Arial, sans-serif;
+}
+h1 {
+  text-align: center;
+  color: #1e293b;
+  margin-bottom: 40px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid #e0e8ff;
+  text-align: center;
+}
+.card h2 {
+  margin: 0 0 20px;
+  font-size: 18px;
+  color: #1e293b;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 9999px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background: #4338ca;
+}
+</style>
+</head>
+<body>
+
+<h1>数学工具箱</h1>
+
+<div class="grid">
+  <div class="card">
+    <h2>数学分析<br>（积分估算）</h2>
+    <button onclick="location.href='数学分析（积分估算）.html'">
+      进入积分工具
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>线性代数<br>（矩阵计算机）</h2>
+    <button onclick="location.href='矩阵计算机.html'">
+      进入矩阵工具
+    </button>
+  </div>
+</div>
+
+</body>
+</html>
