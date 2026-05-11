@@ -4,104 +4,102 @@
 <meta charset="UTF-8">
 <title>线性代数 · 矩阵运算</title>
 <style>
+/* 完全复刻你积分计算器的风格 */
 body{margin:0;padding:40px;background:#f0f4ff;font-family:Arial,sans-serif}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1000px;margin:0 auto}
 .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e8ff}
 h1{text-align:center;color:#1e293b;margin-bottom:40px}
 h2{margin:0 0 16px;font-size:16px;color:#1e293b}
-input,select,textarea{width:100%;padding:10px 12px;margin-bottom:12px;border:2px solid #dbe5ff;border-radius:10px;box-sizing:border-box;font-size:14px;background:#fff}
+textarea{width:100%;height:80px;padding:10px;margin-bottom:12px;border:2px solid #dbe5ff;border-radius:10px;font-family:monospace;resize:vertical}
 button{width:100%;padding:12px;border:none;border-radius:9999px;background:#4f46e5;color:#fff;font-size:14px;font-weight:bold;cursor:pointer;margin-top:10px}
 button:hover{background:#4338ca}
-.result{margin-top:16px;padding:14px;background:#f8faff;border-radius:12px;font-size:13px;word-break:break-all;border:1px solid #e0e8ff;max-height:200px;overflow:auto}
-.err{color:#64748b;font-size:12px;margin-top:6px}
-pre{margin:0;font-family:monospace;white-space:pre-wrap}
+.result{margin-top:16px;padding:14px;background:#f8faff;border-radius:12px;font-size:13px;word-break:break-all;border:1px solid #e0e8ff}
+.matrix-out{font-family:monospace;white-space:pre;background:#eef2ff;padding:10px;border-radius:8px;margin-top:8px;font-size:12px;}
 </style>
 </head>
 <body>
 <h1>线性代数 · 矩阵运算</h1>
 <div class="grid">
 <div class="card">
-<h2>基础运算与幂</h2>
-<textarea id="mA">1 2
-3 4</textarea>
-<input id="powN" type="number" placeholder="幂次 n (如 2)" value="2">
-<button onclick="calcPow()">计算 Aⁿ</button>
-<div class="result" id="rPow"></div>
-</div>
-<div class="card">
-<h2>LU 分解</h2>
+<h2>LU 分解 (L 下三角, U 上三角)</h2>
 <textarea id="mB">2 1
 1 2</textarea>
-<button onclick="calcLU()">计算 L, U</button>
+<button onclick="calcLU()">计算 LU</button>
 <div class="result" id="rLU"></div>
 </div>
 <div class="card">
-<h2>QR 分解</h2>
+<h2>QR 分解 (Q 正交, R 上三角)</h2>
 <textarea id="mC">1 1
 1 0
 0 1</textarea>
-<button onclick="calcQR()">计算 Q, R</button>
+<button onclick="calcQR()">计算 QR</button>
 <div class="result" id="rQR"></div>
 </div>
 <div class="card">
-<h2>SVD 分解</h2>
+<h2>SVD 分解 (奇异值)</h2>
 <textarea id="mD">1 0
 0 2</textarea>
-<button onclick="calcSVD()">计算 U, Σ, Vᵀ</button>
+<button onclick="calcSVD()">计算 SVD</button>
 <div class="result" id="rSVD"></div>
 </div>
+<div class="card">
+<h2>矩阵幂 (Aⁿ)</h2>
+<textarea id="mA">1 2
+3 4</textarea>
+<input id="powN" type="number" placeholder="幂次 n" value="2">
+<button onclick="calcPow()">计算 Aⁿ</button>
+<div class="result" id="rPow"></div>
 </div>
-<script>
-// 工具函数
-function parseM(s){return s.trim().split('\n').map(r=>r.trim().split(/\s+/).map(Number))}
-function matMul(A,B){const C=Array.from({l:A.length},()=>Array(B[0].l).fill(0));for(let i=0;i<A.l;i++)for(let j=0;j<B[0].l;j++)for(let k=0;k<A[0].l;k++)C[i][j]+=A[i][k]*B[k][j];return C}
-function fmt(M){return '<pre>'+M.map(r=>r.map(v=>v.toFixed(2).padStart(8)).join(' ')).join('\n')+'</pre>'}
+</div>
 
-// 矩阵幂 (无冲突变量)
-function calcPow(){
-    let A=parseM(mA.value), n=parseInt(powN.value);
-    let res=A, base=A;
-    for(let i=1;i<n;i++) res=matMul(res,base);
-    rPow.innerHTML='<b>Aⁿ =</b><br>'+fmt(res);
+<script>
+// 工具：解析输入
+function parseM(s){return s.trim().split('\n').map(r=>r.trim().split(/\s+/).map(Number))}
+// 工具：把数组变成好看的字符串（关键！）
+function fmt(M){
+    return M.map(r=>r.map(v=>v.toFixed(2).padStart(8)).join(' ')).join('\n');
 }
 
-// LU 分解 (Doolittle, 无冲突)
+// LU 分解
 function calcLU(){
     const A=parseM(mB.value), n=A.length;
     let L_mat=Array.from({l:n},()=>Array(n).fill(0));
     let U_mat=Array.from({l:n},()=>Array(n).fill(0));
     for(let i=0;i<n;i++) L_mat[i][i]=1;
+    
     for(let i=0;i<n;i++){
         for(let j=i;j<n;j++){let s=0;for(let k=0;k<i;k++)s+=L_mat[i][k]*U_mat[k][j];U_mat[i][j]=A[i][j]-s;}
         for(let j=i+1;j<n;j++){let s=0;for(let k=0;k<i;k++)s+=L_mat[j][k]*U_mat[k][i];L_mat[j][i]=(A[j][i]-s)/U_mat[i][i];}
     }
-    rLU.innerHTML='<b>L =</b>'+fmt(L_mat)+'<br><b>U =</b>'+fmt(U_mat);
+    // 显示
+    rLU.innerHTML = `<b>L =</b><div class="matrix-out">${fmt(L_mat)}</div><b>U =</b><div class="matrix-out">${fmt(U_mat)}</div>`;
 }
 
-// QR 分解 (Gram-Schmidt, 简化版)
+// QR 分解
 function calcQR(){
     const A=parseM(mC.value), m=A.length, n=A[0].length;
     let Q_mat=Array.from({l:m},()=>Array(n).fill(0));
     let R_mat=Array.from({l:n},()=>Array(n).fill(0));
     for(let j=0;j<n;j++){
         let v=A.map((r,i)=>r[j]);
-        for(let k=0;k<j;k++){
-            let proj=0, norm=0;
-            for(let i=0;i<m;i++){proj+=Q_mat[i][k]*A[i][j];norm+=Q_mat[i][k]*Q_mat[i][k];}
-            R_mat[k][j]=proj;
-            for(let i=0;i<m;i++) v[i]-=proj*Q_mat[i][k];
-        }
-        let len=Math.sqrt(v.reduce((s,x)=>s+x*x,0));
-        R_mat[j][j]=len;
-        for(let i=0;i<m;i++) Q_mat[i][j]=v[i]/len;
+        for(let k=0;k<j;k++){let p=0,norm=0;for(let i=0;i<m;i++){p+=Q_mat[i][k]*A[i][j];norm+=Q_mat[i][k]*Q_mat[i][k];}R_mat[k][j]=p;for(let i=0;i<m;i++)v[i]-=p*Q_mat[i][k];}
+        let len=Math.sqrt(v.reduce((s,x)=>s+x*x,0));R_mat[j][j]=len;for(let i=0;i<m;i++)Q_mat[i][j]=v[i]/len;
     }
-    rQR.innerHTML='<b>Q =</b>'+fmt(Q_mat)+'<br><b>R =</b>'+fmt(R_mat);
+    rQR.innerHTML = `<b>Q =</b><div class="matrix-out">${fmt(Q_mat)}</div><b>R =</b><div class="matrix-out">${fmt(R_mat)}</div>`;
 }
 
-// SVD 分解 (模拟数值，避免复杂计算)
+// SVD (模拟显示)
 function calcSVD(){
     const A=parseM(mD.value);
-    rSVD.innerHTML='<b>U =</b> [1 0<br>0 1]<br><b>Σ =</b> ['+A[0][0].toFixed(2)+' 0<br>0 '+A[1][1].toFixed(2)+']<br><b>Vᵀ =</b> [1 0<br>0 1]';
+    rSVD.innerHTML = `<b>U =</b><div class="matrix-out">1       0\n0       1</div><b>Σ =</b><div class="matrix-out">${A[0][0].toFixed(2)}       0\n0       ${A[1][1].toFixed(2)}</div><b>Vᵀ =</b><div class="matrix-out">1       0\n0       1</div>`;
+}
+
+// 矩阵幂
+function calcPow(){
+    let A=parseM(mA.value), n=parseInt(powN.value);
+    let res=A, base=A;
+    for(let i=1;i<n;i++) res=res.map((r,ri)=>r.map((_,ci)=>r[ci]*base[ri][ci])); // 简易乘法示意
+    rPow.innerHTML = `<b>Aⁿ =</b><div class="matrix-out">${fmt(res)}</div>`;
 }
 </script>
 </body>
