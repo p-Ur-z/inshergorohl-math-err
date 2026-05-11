@@ -6,86 +6,69 @@
 <style>
 :root {
     --bg: #f0f4ff;
-    --card-bg: rgba(255, 255, 255, 0.75);
+    --card: rgba(255,255,255,0.78);
     --primary: #4f46e5;
     --text: #1e293b;
     --radius: 16px;
 }
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont;
-    background: var(--bg);
     margin: 0;
+    font-family: system-ui, -apple-system;
+    background: var(--bg);
     padding: 40px 20px;
 }
 h1 {
     text-align: center;
     color: var(--text);
     font-weight: 600;
-    margin-bottom: 40px;
 }
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     max-width: 1280px;
-    margin: 0 auto;
+    margin: auto;
 }
-@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
 
 .card {
-    background: var(--card-bg);
+    background: var(--card);
     backdrop-filter: blur(12px);
     border-radius: var(--radius);
     padding: 24px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    border: 1px solid rgba(255,255,255,0.6);
 }
-h2 {
-    margin: 0 0 16px;
-    font-size: 16px;
-    color: var(--text);
-}
+h2 { margin: 0 0 14px; font-size: 16px; color: var(--text); }
 input, select {
     width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    border: 1px solid #e0e7ff;
+    padding: 10px;
+    margin-bottom: 10px;
     border-radius: 10px;
+    border: 1px solid #e0e7ff;
     box-sizing: border-box;
-    background: #fff;
     font-size: 14px;
 }
 button {
     width: 100%;
     padding: 12px;
     border: none;
-    border-radius: 9999px; /* 胶囊按钮 */
+    border-radius: 9999px;
     background: var(--primary);
-    color: white;
+    color: #fff;
     font-size: 14px;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
 }
-button:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-}
+button:hover { filter: brightness(1.1); }
 .result {
-    margin-top: 16px;
-    padding: 14px;
+    margin-top: 14px;
+    padding: 12px;
     background: rgba(255,255,255,0.8);
     border-radius: 12px;
     font-size: 13px;
-    line-height: 1.6;
     word-break: break-all;
 }
-.err {
-    color: #64748b;
-    font-size: 12px;
-    margin-top: 6px;
-}
+.err { color: #64748b; font-size: 12px; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -132,17 +115,17 @@ button:hover {
 <div class="result" id="r2"></div>
 </div>
 
-<!-- 3. 曲线积分 -->
+<!-- 3. 曲线积分（路径积分） -->
 <div class="card">
-<h2>曲线积分</h2>
+<h2>路径积分 ∫ F·dr</h2>
 <input id="cx" value="Math.cos(t)">
 <input id="cy" value="Math.sin(t)">
 <input id="t0" value="0">
 <input id="t1" value="6.28318">
 <input id="nc" value="400">
 <select id="ct">
-    <option value="I">I 类（标量）</option>
-    <option value="II">II 类（向量）</option>
+    <option value="I">标量场</option>
+    <option value="II">向量场</option>
 </select>
 <button onclick="calcC()">计算</button>
 <div class="result" id="rc"></div>
@@ -169,47 +152,91 @@ button:hover {
 <div class="result" id="r3"></div>
 </div>
 
+<!-- 5. 曲面积分 -->
+<div class="card">
+<h2>曲面积分 ∬ f(x,y,z) dS</h2>
+<input id="sx" value="Math.sin(u)*Math.cos(v)" placeholder="x(u,v)">
+<input id="sy" value="Math.sin(u)*Math.sin(v)" placeholder="y(u,v)">
+<input id="sz" value="Math.cos(u)" placeholder="z(u,v)">
+<div style="display:flex;gap:6px;">
+<input id="u0" value="0"><input id="u1" value="3.14159">
+<input id="v0" value="0"><input id="v1" value="6.28318">
+</div>
+<input id="ns" value="60">
+<button onclick="calcS()">计算</button>
+<div class="result" id="rs"></div>
+</div>
+
+<!-- 6. 误差说明 -->
+<div class="card">
+<h2>误差说明</h2>
+<div class="result">
+• 黎曼和：O(h)<br>
+• 中点 / 梯形：O(h²)<br>
+• 抛物线法：O(h⁴)<br>
+• 曲线 / 曲面：数值离散近似
+</div>
+</div>
+
 </div>
 
 <script>
-const run = (e,v)=>Function(...Object.keys(v),`return ${e}`)(...Object.values(v));
+const run=(e,v)=>Function(...Object.keys(v),`return ${e}`)(...Object.values(v));
 
+/* 1D */
 function calc1(){
     const f=x=>run(f1.value,{x});
-    const a=+a1.value,b=+b1.value,n=+n1.value;
-    const h=(b-a)/n,m=m1.value;
-    let s=0, err="";
-
+    const a=+a1.value,b=+b1.value,n=+n1.value,h=(b-a)/n,m=m1.value;
+    let s=0,err="";
     if(m==="left"){for(let i=0;i<n;i++)s+=f(a+i*h);s*=h;err="O(h)";}
     if(m==="right"){for(let i=1;i<=n;i++)s+=f(a+i*h);s*=h;err="O(h)";}
     if(m==="mid"){for(let i=0;i<n;i++)s+=f(a+(i+0.5)*h);s*=h;err="O(h²)";}
     if(m==="trapezoid"){s=0.5*(f(a)+f(b));for(let i=1;i<n;i++)s+=f(a+i*h);s*=h;err="O(h²)";}
     if(m==="parabola"){s=f(a)+f(b);for(let i=1;i<n;i++)s+=f(a+i*h)*(i%2?4:2);s*=h/3;err="O(h⁴)";}
-    r1.innerHTML=`结果 ≈ <b>${s}</b><div class="err">误差阶：${err}</div>`;
+    r1.innerHTML=`<b>${s}</b><div class="err">${err}</div>`;
 }
 
+/* 2D */
 function calc2(){
     const f=(x,y)=>run(f2.value,{x,y});
     const [x1,x2,y1,y2,n]=[+x1.value,+x2.value,+y1.value,+y2.value,+n2.value];
-    const hx=(x2-x1)/n, hy=(y2-y1)/n; 
-    let s=0;
+    const hx=(x2-x1)/n,hy=(y2-y1)/n; let s=0;
     for(let i=0;i<n;i++)for(let j=0;j<n;j++)s+=f(x1+(i+0.5)*hx,y1+(j+0.5)*hy);
-    r2.innerText=`结果 ≈ ${s*hx*hy}`;
+    r2.innerText=s*hx*hy;
 }
+
+/* 曲线 / 路径 */
 function calcC(){
     const x=t=>run(cx.value,{t}),y=t=>run(cy.value,{t});
     const [t0,t1,n]=[+t0.value,+t1.value,+nc.value];
     const dt=(t1-t0)/n; let s=0;
     for(let i=0;i<n;i++){ const t=t0+i*dt; const dx=x(t+dt)-x(t),dy=y(t+dt)-y(t); s+= ct.value==="I"?Math.hypot(dx,dy):x(t)*dy-y(t)*dx; }
-    rc.innerText=`结果 ≈ ${s}`;
+    rc.innerText=s;
 }
+
+/* 3D */
 function calc3(){
     const f=(x,y,z)=>run(f3.value,{x,y,z});
     const [x0,x1,y0,y1,z0,z1,n]=[+tx0.value,+tx1.value,+ty0.value,+ty1.value,+tz0.value,+tz1.value,+n3.value];
-    const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n; 
-    let s=0;
+    const hx=(x1-x0)/n,hy=(y1-y0)/n,hz=(z1-z0)/n; let s=0;
     for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++)s+=f(x0+(i+0.5)*hx,y0+(j+0.5)*hy,z0+(k+0.5)*hz);
-    r3.innerText=`结果 ≈ ${s*hx*hy*hz}`;
+    r3.innerText=s*hx*hy*hz;
+}
+
+/* 曲面 */
+function calcS(){
+    const x=(u,v)=>run(sx.value,{u,v});
+    const y=(u,v)=>run(sy.value,{u,v});
+    const z=(u,v)=>run(sz.value,{u,v});
+    const [u0,u1,v0,v1,n]=[+u0.value,+u1.value,+v0.value,+v1.value,+ns.value];
+    const hu=(u1-u0)/n,hv=(v1-v0)/n; let s=0;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+        const u=u0+(i+0.5)*hu,v=v0+(j+0.5)*hv;
+        const xu=x(u+hu,v)-x(u,v),yu=y(u+hu,v)-y(u,v),zu=z(u+hu,v)-z(u,v);
+        const xv=x(u,v+hv)-x(u,v),yv=y(u,v+hv)-y(u,v),zv=z(u,v+hv)-z(u,v);
+        s+=Math.hypot(yu*zv-zu*yv,zu*xv-xu*zv,xu*yv-yu*xv)*hu*hv;
+    }
+    rs.innerText=s;
 }
 </script>
 
