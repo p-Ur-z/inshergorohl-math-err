@@ -1,0 +1,111 @@
+% !TEX program = xelatex
+% 数学分析第三章：导数与微分
+
+\documentclass[12pt, a4paper]{article}
+
+% ---------- 基础宏包 ----------
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setmainfont{Times New Roman}
+\setCJKmainfont{SimSun}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{left=3cm, right=3cm, top=2.5cm, bottom=2.5cm}
+
+% ---------- 定理环境 ----------
+\newtheorem{definition}{定义}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{corollary}{推论}[section]
+\newtheorem{lemma}{引理}[section]
+\newtheorem{example}{例}[section]
+
+% ---------- 自定义命令 ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dif}{\mathrm{d}} % 微分符号 upright d
+
+% ---------- 文档开始 ----------
+\begin{document}
+
+\title{数学分析 III：导数与微分}
+\author{inshergorohl}
+\date{Flux 1.3 Reference}
+\maketitle
+
+\section{导数的概念}
+\subsection{定义}
+
+\begin{definition}[导数]
+设函数 $y = f(x)$ 在 $x_0$ 的某邻域内有定义。若极限
+\[
+f'(x_0) = \lim_{\Delta x \to 0} \frac{f(x_0 + \Delta x) - f(x_0)}{\Delta x}
+\]
+存在，则称 $f$ 在 $x_0$ 处\textbf{可导}，并称该极限为 $f$ 在 $x_0$ 处的\textbf{导数}。
+\end{definition}
+
+\begin{definition}[左导数与右导数]
+\[
+f'_-(x_0) = \lim_{x \to x_0^-} \frac{f(x) - f(x_0)}{x - x_0}, \quad
+f'_+(x_0) = \lim_{x \to x_0^+} \frac{f(x) - f(x_0)}{x - x_0}.
+\]
+\end{definition}
+
+\begin{theorem}[可导与连续的关系]
+若 $f(x)$ 在 $x_0$ 处可导，则 $f(x)$ 在 $x_0$ 处必连续。反之不成立（如 $y=|x|$ 在 $x=0$）。
+\end{theorem}
+
+\section{求导法则}
+
+\subsection{基本公式}
+\begin{enumerate}
+    \item $(C)' = 0$
+    \item $(x^\alpha)' = \alpha x^{\alpha-1}$
+    \item $(\sin x)' = \cos x$, \quad $(\cos x)' = -\sin x$
+    \item $(e^x)' = e^x$, \quad $(\ln x)' = \frac{1}{x}$
+\end{enumerate}
+
+\subsection{复合函数求导（链式法则）}
+\begin{theorem}
+设 $y = f(u), u = g(x)$ 均可导，则复合函数 $y = f(g(x))$ 可导，且
+\[
+\frac{\dif y}{\dif x} = \frac{\dif y}{\dif u} \cdot \frac{\dif u}{\dif x}.
+\]
+\end{theorem}
+
+\section{微分中值定理}
+
+\begin{theorem}[Fermat 引理]
+若函数 $f$ 在 $x_0$ 处取极值且可导，则 $f'(x_0) = 0$。
+\end{theorem}
+
+\begin{theorem}[Rolle 中值定理]
+设 $f \in C[a,b]$，且在 $(a,b)$ 内可导，且 $f(a)=f(b)$。
+则 $\exists \xi \in (a,b)$，使得 $f'(\xi) = 0$。
+\end{theorem}
+
+\begin{theorem}[Lagrange 中值定理]
+设 $f \in C[a,b]$，且在 $(a,b)$ 内可导。
+则 $\exists \xi \in (a,b)$，使得
+\[
+f(b) - f(a) = f'(\xi)(b-a).
+\]
+\end{theorem}
+
+\begin{corollary}[导数与单调性]
+若 $f'(x) > 0$ 在 $(a,b)$ 内恒成立，则 $f(x)$ 在 $[a,b]$ 上严格单调增。
+\end{corollary}
+
+\section*{附录：导数速查表}
+\[
+\begin{array}{|c|c|}
+\hline
+f(x) & f'(x) \\ \hline
+x^n & nx^{n-1} \\ \hline
+\sin x & \cos x \\ \hline
+\cos x & -\sin x \\ \hline
+e^x & e^x \\ \hline
+\ln x & 1/x \\ \hline
+\end{array}
+\]
+
+\end{document}
