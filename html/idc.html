@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>非矩形区域积分</title>
+<style>
+body { font-family: "Microsoft YaHei", sans-serif; background: #f4f6f8; padding: 20px; }
+.container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+h2 { margin-top: 0; text-align: center; }
+label { display: block; margin-top: 12px; font-size: 14px; }
+input, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+button { width: 100%; margin-top: 18px; padding: 12px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; }
+button:hover { background: #1669d6; }
+pre { background: #222; color: #0f0; padding: 12px; margin-top: 15px; border-radius: 4px; overflow-x: auto; }
+.back-btn { background: #1a73e8; text-align: center; color: #fff; padding: 12px; border-radius: 4px; cursor: pointer; margin-top: 20px; display: block; text-decoration: none; }
+.back-btn:hover { background: #1669d6; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>非矩形区域二重 / 三重积分</h2>
+    <label>被积函数 f(x, y, z)</label>
+    <input id="func" value="x*x + y*y + z*z">
+    <label>积分区域</label>
+    <select id="region">
+        <option value="circle">圆</option>
+        <option value="ellipse">椭圆</option>
+        <option value="cylinder">圆柱</option>
+        <option value="sphere">球体</option>
+    </select>
+    <label>R</label>
+    <input id="R" value="1">
+    <label>a</label>
+    <input id="a" value="2">
+    <label>b</label>
+    <input id="b" value="1">
+    <label>z₀</label>
+    <input id="z0" value="0">
+    <label>z₁</label>
+    <input id="z1" value="1">
+    <button onclick="compute()">开始计算</button>
+    <pre id="output"></pre>
+    <a href="index.html" class="back-btn">返回主界面</a>
+</div>
+<script>
+function compute() {
+    const f = document.getElementById("func").value;
+    const r = document.getElementById("region").value;
+    const R = Number(document.getElementById("R").value);
+    const a = Number(document.getElementById("a").value);
+    const b = Number(document.getElementById("b").value);
+    const z0 = Number(document.getElementById("z0").value);
+    const z1 = Number(document.getElementById("z1").value);
+    const N = 500000;
+    let inside = 0, sum = 0;
+    for (let i = 0; i < N; i++) {
+        let x = Math.random() * 2 - 1;
+        let y = Math.random() * 2 - 1;
+        let z = Math.random() * 2 - 1;
+        let ok = false;
+        if (r === "circle") ok = x*x + y*y <= R*R;
+        if (r === "ellipse") ok = x*x/(a*a) + y*y/(b*b) <= 1;
+        if (r === "cylinder") ok = x*x + y*y <= R*R && z >= z0 && z <= z1;
+        if (r === "sphere") ok = x*x + y*y + z*z <= R*R;
+        if (ok) { inside++; sum += eval(f); }
+    }
+    let vol =
+        r === "circle" ? Math.PI * R * R :
+        r === "ellipse" ? Math.PI * a * b :
+        r === "cylinder" ? Math.PI * R * R * (z1 - z0) :
+        r === "sphere" ? 4/3 * Math.PI * R * R * R : 1;
+    document.getElementById("output").textContent =
+`采样点数：${N}
+区域内点数：${inside}
+积分结果 ≈ ${vol * sum / inside}`;
+}
+</script>
+</body>
+</html>
