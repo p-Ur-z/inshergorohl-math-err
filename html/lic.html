@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lic · 数值积分</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -68,6 +69,7 @@ input, select, button {
     border-radius: 8px;
     border: 1px solid var(--line);
     font-size: 14px;
+    font-family: 'Inter', sans-serif;
 }
 
 button {
@@ -76,6 +78,11 @@ button {
     border: none;
     cursor: pointer;
     font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.9;
 }
 
 .result {
@@ -85,6 +92,7 @@ button {
     background: #f0f9ff;
     border: 1px solid #bfdbfe;
     font-size: 14px;
+    line-height: 1.6;
 }
 
 footer {
@@ -107,7 +115,7 @@ footer {
 </header>
 
 <div class="card">
-    <input id="func" placeholder="函数 f(x)，例如：x^2 + 1">
+    <input id="func" type="text" placeholder="函数 f(x)，例如：x^2 + sin(x)">
     <input id="start" type="number" placeholder="起始值 a">
     <input id="end" type="number" placeholder="结束值 b">
     <select id="method">
@@ -119,15 +127,87 @@ footer {
     <div id="out" class="result" style="display:none;"></div>
 </div>
 
-<footer>© 2026 p-Ur-z · Flux v1.3</footer>
+<footer>© 2026 p-Ur-z · Flux v1.3 · Pure HTML / CSS / JS</footer>
 
 <script>
 function calculate() {
-    const f = document.getElementById('func').value;
+    const funcInput = document.getElementById('func').value;
     const a = parseFloat(document.getElementById('start').value);
     const b = parseFloat(document.getElementById('end').value);
-    const n = 1000;
+    const method = document.getElementById('method').value;
+    const n = 10000; // 采样点数
     const dx = (b - a) / n;
     let sum = 0;
 
-    for (let i
+    // 安全评估函数
+    function f(x) {
+        try {
+            // 替换常见数学函数
+            let expr = funcInput
+                .replace(/sin\(/g, 'Math.sin(')
+                .replace(/cos\(/g, 'Math.cos(')
+                .replace(/tan\(/g, 'Math.tan(')
+                .replace(/log\(/g, 'Math.log(')
+                .replace(/sqrt\(/g, 'Math.sqrt(')
+                .replace(/pow\(/g, 'Math.pow(')
+                .replace(/pi/g, 'Math.PI')
+                .replace(/e/g, 'Math.E');
+            return eval(expr.replace(/x/g, `(${x})`));
+        } catch (e) {
+            return NaN;
+        }
+    }
+
+    for (let i = 0; i < n; i++) {
+        let x;
+        if (method === 'left') {
+            x = a + i * dx;
+        } else if (method === 'right') {
+            x = a + (i + 1) * dx;
+        } else { // mid
+            x = a + (i + 0.5) * dx;
+        }
+        const fx = f(x);
+        if (isNaN(fx)) {
+            document.getElementById('out').innerHTML = '<span style="color:#ef4444;">函数解析错误，请检查输入。</span>';
+            document.getElementById('out').style.display = 'block';
+            return;
+        }
+        sum += fx * dx;
+    }
+
+    const out = document.getElementById('out');
+    out.style.display = 'block';
+    out.innerHTML = `<strong>近似结果：</strong> ${sum.toFixed(8)}`;
+}
+
+// ===== 最恨：点击一次即封锁 =====
+(function () {
+    const MIN = 1;
+    const BLOCKED_PAGE = 'blocked.html';
+
+    let count = parseInt(localStorage.getItem('flux_click_count'));
+    if (isNaN(count)) {
+        count = 1;
+        localStorage.setItem('flux_click_count', count);
+    }
+
+    if (count < MIN || localStorage.getItem('flux_blocked') === 'true') {
+        localStorage.setItem('flux_blocked', 'true');
+        window.location.href = BLOCKED_PAGE;
+    }
+
+    document.addEventListener('click', function () {
+        count--;
+        localStorage.setItem('flux_click_count', count);
+        if (count < MIN) {
+            localStorage.setItem('flux_blocked', 'true');
+            alert('⚠️ 点击次数已耗尽！\n访问已被阻断。');
+            window.location.href = BLOCKED_PAGE;
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
