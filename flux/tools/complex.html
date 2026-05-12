@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>复数运算</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/tool.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>复数工具</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-menu="complex">四则运算</div>
+          <div class="nav-item" data-menu="props">复数属性</div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <a href="../flux.html" class="home-link">
+            <img src="../icons/home.svg" alt="返回主页" />
+          </a>
+          <h1 id="page-title">四则运算</h1>
+        </div>
+
+        <div class="content-scroll">
+          <div id="page-complex" class="page-content">
+            <div class="form-group">
+              <label>复数 \(z_1\) (格式: a,b)</label>
+              <textarea id="complexA">1,2</textarea>
+            </div>
+            <div class="form-group">
+              <label>复数 \(z_2\) (格式: c,d)</label>
+              <textarea id="complexB">3,-1</textarea>
+            </div>
+            <div class="form-group">
+              <label>运算</label>
+              <select id="op">
+                <option value="+">加法 (+)</option>
+                <option value="-">减法 (-)</option>
+                <option value="*">乘法 (×)</option>
+                <option value="/">除法 (÷)</option>
+                <option value="^">幂运算 (^)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="page-props" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>复数 (格式: a,b)</label>
+              <textarea id="prop_input">3,4</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 结果栏：标题 + 内容 + 右上角计算按钮 -->
+        <div class="result-footer">
+          <div class="result-header">
+            <span>计算结果</span>
+          </div>
+          <div class="result-content" id="result-area">...</div>
+          <button class="calc-icon" id="calc-btn" onclick="handleCalc()">
+            <img src="../icons/calc.svg" alt="计算" />
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../scripts/complex.js"></script>
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script>
+      function handleCalc() {
+        const activeMenu = document
+          .querySelector(".nav-item.active")
+          .getAttribute("data-menu");
+        if (activeMenu === "complex") {
+          calcComplex();
+        } else {
+          calcProps();
+        }
+      }
+
+      function calcComplex() {
+        try {
+          const z1 = parseComplex(document.getElementById("complexA").value);
+          const z2 = parseComplex(document.getElementById("complexB").value);
+          const op = document.getElementById("op").value;
+          const result = computeComplex(z1, z2, op);
+          document.getElementById("result-area").innerHTML =
+            `\\(z_1 = ${z1.toString()}\\)<br>` +
+            `\\(z_2 = ${z2.toString()}\\)<br>` +
+            `结果: ${result.toString()}`;
+          if (window.MathJax) MathJax.typesetPromise();
+        } catch (e) {
+          document.getElementById("result-area").innerHTML =
+            "error: " + e.message;
+        }
+      }
+
+      function calcProps() {
+        try {
+          const z = parseComplex(document.getElementById("prop_input").value);
+          const { modulus, argument } = computeProps(z);
+          document.getElementById("result-area").innerHTML =
+            `\\(z = ${z.toString()}\\)<br>` +
+            `模长 \\(|z| = ${modulus.toFixed(4)}\\)<br>` +
+            `辐角 \\(\\arg(z) = ${argument.toFixed(2)}^\\circ\\)`;
+          if (window.MathJax) MathJax.typesetPromise();
+        } catch (e) {
+          document.getElementById("result-area").innerHTML =
+            "错误: " + e.message;
+        }
+      }
+    </script>
+  </body>
+</html>

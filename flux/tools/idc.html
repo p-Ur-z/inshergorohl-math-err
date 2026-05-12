@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>蒙特卡洛积分</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/tool.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>蒙特卡洛积分</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-menu="montecarlo">蒙特卡洛积分</div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <a href="../flux.html" class="home-link">
+            <img src="../icons/home.svg" alt="返回主页" />
+          </a>
+          <h1 id="page-title">蒙特卡洛积分</h1>
+        </div>
+
+        <div class="content-scroll">
+          <div id="page-montecarlo" class="page-content">
+            <div class="form-group">
+              <label>被积函数 \(f(x, y, z)\)</label>
+              <input id="func" value="x*x + y*y + z*z" />
+            </div>
+            <div class="form-group">
+              <label>积分区域</label>
+              <select id="region">
+                <option value="circle">圆形区域 x² + y² ≤ R²</option>
+                <option value="ellipse">椭圆区域 x²/a² + y²/b² ≤ 1</option>
+                <option value="cylinder">
+                  圆柱体 x² + y² ≤ R², z ∈ [z₀, z₁]
+                </option>
+                <option value="sphere">球体 x² + y² + z² ≤ R²</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>R</label
+              ><input type="number" id="R" value="1" step="0.1" />
+            </div>
+            <div class="form-group">
+              <label>a</label
+              ><input type="number" id="a" value="2" step="0.1" />
+            </div>
+            <div class="form-group">
+              <label>b</label
+              ><input type="number" id="b" value="1" step="0.1" />
+            </div>
+            <div class="form-group">
+              <label>\(z_0\)</label
+              ><input type="number" id="z0" value="0" step="0.1" />
+            </div>
+            <div class="form-group">
+              <label>\(z_1\)</label
+              ><input type="number" id="z1" value="1" step="0.1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="result-footer">
+          <div class="result-header">
+            <span>计算结果</span>
+          </div>
+          <div class="result-content" id="result-area">...</div>
+          <button class="calc-icon" onclick="compute()">
+            <img src="../icons/calc.svg" alt="计算" />
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../scripts/montecarlo.js"></script>
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script>
+      function compute() {
+        const fExpr = document.getElementById("func").value;
+        const region = document.getElementById("region").value;
+        const R = Number(document.getElementById("R").value);
+        const a = Number(document.getElementById("a").value);
+        const b = Number(document.getElementById("b").value);
+        const z0 = Number(document.getElementById("z0").value);
+        const z1 = Number(document.getElementById("z1").value);
+        const N = 800000;
+        const resultDiv = document.getElementById("result-area");
+        resultDiv.textContent = "...";
+        setTimeout(() => {
+          const res = monteCarloIntegral(fExpr, region, R, a, b, z0, z1, N);
+          if (res.error) {
+            resultDiv.textContent = "函数解析错误：" + res.error;
+            return;
+          }
+          const regionName =
+            document.getElementById("region").options[
+              document.getElementById("region").selectedIndex
+            ].text;
+          resultDiv.innerHTML = `采样点数：${res.N.toLocaleString()}<br>有效样本：${res.inside.toLocaleString()} (${((res.inside / res.N) * 100).toFixed(1)}%)<br>积分结果：${res.result.toFixed(8)}<br>区域：${regionName}`;
+        }, 50);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+window.MathJax = {
+  tex: {
+    inlineMath: [
+      ["$", "$"],
+      ["\\(", "\\)"],
+    ],
+    displayMath: [
+      ["$$", "$$"],
+      ["\\[", "\\]"],
+    ],
+    processEscapes: true,
+  },
+  options: {
+    ignoreHtmlClass: "no-mathjax",
+    processHtmlClass: "math",
+  },
+};
+
+(function loadMathJax() {
+  const script = document.createElement("script");
+  script.id = "MathJax-script";
+  script.async = true;
+  script.src = "https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js";
+  document.head.appendChild(script);
+})();
