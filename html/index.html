@@ -3,267 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flux v1.3 | Math Toolkit</title>
+    <title>Flux v1.3</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+        /* --- 字体与全局变量 --- */
         :root {
-            --bg-dark: #0a0a0f;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #f0f0f0;
-            --text-secondary: #a0a0a0;
-            --accent: #00e5ff; /* 赛博青 */
-            --accent-glow: rgba(0, 229, 255, 0.3);
+            --bg: #ffffff;
+            --text-primary: #111111;
+            --text-secondary: #6b6b6b;
+            --text-tertiary: #a0a0a0;
+            --border: #f0f0f0;
+            --accent: #111111;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+        }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: var(--bg);
             color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 动态背景 */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        /* 布局容器 */
-        .wrapper {
-            max-width: 1100px;
+        /* --- 容器：极窄版心 --- */
+        .container {
+            max-width: 720px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 80px 20px;
         }
 
-        /* 头部：极简大字体 */
+        /* --- 头部 --- */
         header {
-            text-align: center;
             margin-bottom: 80px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 40px;
         }
-        header .subtitle {
-            font-size: 12px;
+
+        .logo {
+            font-size: 11px;
             font-weight: 600;
-            letter-spacing: 4px;
-            color: var(--accent);
-            margin-bottom: 10px;
+            letter-spacing: 2px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
             text-transform: uppercase;
         }
-        header h1 {
-            font-size: 4rem;
+
+        h1 {
+            font-size: 42px;
             font-weight: 700;
-            letter-spacing: -2px;
-            line-height: 1;
+            letter-spacing: -1.5px; /* 紧缩字间距，显精致 */
+            line-height: 1.1;
+            margin-bottom: 8px;
         }
-        header p {
+
+        .version {
+            font-size: 15px;
             color: var(--text-secondary);
-            margin-top: 15px;
-            font-size: 1.1rem;
+            font-weight: 400;
         }
 
-        /* 网格布局 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        /* 玻璃卡片 */
-        .card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 35px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+        /* --- 列表：无卡片化 --- */
+        .tool-list {
             display: flex;
             flex-direction: column;
+            gap: 0;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
+        /* --- 列表项：像表格一样干净 --- */
+        .tool-item {
+            display: grid;
+            grid-template-columns: 1fr auto; /* 两列布局：左文字，右链接 */
+            align-items: center;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s ease;
         }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+        .tool-item:hover {
+            background-color: #fafafa; /* 极淡的背景变化 */
         }
 
-        .card:hover::before {
-            opacity: 1;
+        /* 图标隐藏或极小化，靠文字撑场面 */
+        .tool-icon {
+            display: none; /* 去掉图标，更纯净 */
         }
 
-        /* 图标样式 */
-        .icon {
-            font-size: 2.5rem;
-            margin-bottom: 25px;
-            filter: drop-shadow(0 0 8px var(--accent-glow));
+        .tool-info h2 {
+            font-size: 17px;
+            font-weight: 500; /* 中等字重，不抢眼 */
+            margin-bottom: 4px;
         }
 
-        /* 文字 */
-        .card h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .card p {
-            font-size: 0.95rem;
+        .tool-info p {
+            font-size: 14px;
             color: var(--text-secondary);
-            line-height: 1.6;
-            flex-grow: 1;
+            line-height: 1.5;
         }
 
-        /* 按钮 */
-        .btn {
-            margin-top: 30px;
-            padding: 12px 24px;
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--text-primary);
+        /* --- 链接样式 --- */
+        .tool-link {
+            font-size: 14px;
+            color: var(--text-tertiary);
             text-decoration: none;
             font-weight: 500;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-        .btn:hover {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-            box-shadow: 0 0 20px var(--accent-glow);
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            margin-left: 20px;
         }
 
-        /* 禁用状态 */
-        .card.disabled {
-            opacity: 0.6;
-            filter: grayscale(0.5);
+        .tool-link:hover {
+            color: var(--text-primary);
+            border-color: #d0d0d0;
+            background-color: #fff;
         }
-        .card.disabled .btn {
+
+        /* --- 禁用状态 --- */
+        .tool-item.disabled .tool-info p {
+            color: var(--text-tertiary);
+        }
+
+        .tool-item.disabled .tool-link {
+            background: var(--border);
+            border-color: transparent;
+            color: var(--text-tertiary);
             cursor: not-allowed;
-            background: transparent;
-            color: var(--text-secondary);
-        }
-        .card.disabled:hover {
-            transform: none;
-            border-color: var(--glass-border);
-            box-shadow: none;
         }
 
-        /* 页脚 */
+        /* --- 页脚 --- */
         footer {
-            text-align: center;
             margin-top: 100px;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            opacity: 0.7;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-tertiary);
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div id="particles-js"></div>
-
-    <div class="wrapper">
+    <div class="container">
         <header>
-            <div class="subtitle">Flux Toolkit</div>
-            <h1>Math v1.3</h1>
-            <p>Pure HTML / CSS / JS · High Performance Computing</p>
+            <div class="logo">Flux Math Toolkit</div>
+            <h1>Flux v1.3</h1>
+            <p class="version">Pure HTML / CSS / JS · 2024 – 2026</p>
         </header>
 
-        <main class="grid">
-            <!-- 卡片 1 -->
-            <div class="card">
-                <div class="icon">∫</div>
-                <h2>Lik · Numerical</h2>
-                <p>黎曼和估算，输入函数与区间，快速得到近似结果。</p>
-                <a href="#" class="btn">Launch Tool</a>
+        <main class="tool-list">
+            
+            <!-- 工具 1 -->
+            <div class="tool-item">
+                <div class="tool-info">
+                    <h2>Lik · 数值积分</h2>
+                    <p>黎曼和估算，输入函数与区间，快速得到近似结果。</p>
+                </div>
+                <a href="#" class="tool-link">打开工具</a>
             </div>
 
-            <!-- 卡片 2 -->
-            <div class="card">
-                <div class="icon">[ ]</div>
-                <h2>Matrix · Linear</h2>
-                <p>行列式、逆矩阵、秩，告别繁琐手算。</p>
-                <a href="#" class="btn">Launch Tool</a>
+            <!-- 工具 2 -->
+            <div class="tool-item">
+                <div class="tool-info">
+                    <h2>Matrix · 线性代数</h2>
+                    <p>行列式、逆矩阵、秩，告别繁琐手算。</p>
+                </div>
+                <a href="#" class="tool-link">打开工具</a>
             </div>
 
-            <!-- 卡片 3 -->
-            <div class="card">
-                <div class="icon">Ω</div>
-                <h2>ldc · Monte Carlo</h2>
-                <p>圆、球、复杂区域积分，随机撒点法。</p>
-                <a href="#" class="btn">Launch Tool</a>
+            <!-- 工具 3 -->
+            <div class="tool-item">
+                <div class="tool-info">
+                    <h2>ldc · 蒙特卡洛积分</h2>
+                    <p>圆、球、复杂区域积分，随机撒点法。</p>
+                </div>
+                <a href="#" class="tool-link">打开工具</a>
             </div>
 
-            <!-- 卡片 4 (开发中) -->
-            <div class="card disabled">
-                <div class="icon">ℂ</div>
-                <h2>Complex · v1.4</h2>
-                <p>支持复数的加减乘除、共轭、模长及极坐标转换。</p>
-                <div class="btn">Coming Soon</div>
+            <!-- 工具 4 (开发中) -->
+            <div class="tool-item disabled">
+                <div class="tool-info">
+                    <h2>Complex · 复数计算</h2>
+                    <p>支持复数的加减乘除、共轭、模长及极坐标转换。</p>
+                </div>
+                <div class="tool-link">Coming Soon</div>
             </div>
+
         </main>
 
         <footer>
-            <p>© 2024 – 2026 p-Ur-z · Flux v1.3</p>
+            <p>© 2024 – 2026 p-Ur-z</p>
         </footer>
     </div>
 
-    <!-- 粒子效果 JS -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 50, density: { enable: true, value_area: 800 } },
-                color: { value: "#00e5ff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.3, random: true },
-                size: { value: 2, random: true },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#00e5ff",
-                    opacity: 0.1,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 1,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out"
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: true, mode: "repulse" },
-                    onclick: { enable: false }
-                }
-            },
-            retina_detect: true
-        });
-    </script>
 </body>
 </html>
