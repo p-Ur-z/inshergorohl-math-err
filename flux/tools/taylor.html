@@ -52,10 +52,9 @@
         </div>
 
         <div class="result-footer">
-          <div class="result-header">
-            <span>计算结果</span>
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
           </div>
-          <div class="result-content" id="result-area">...</div>
           <button class="calc-icon" onclick="calc()">
             <img src="../icons/calc.svg" alt="计算" />
           </button>
@@ -66,15 +65,21 @@
     <script src="../scripts/taylor.js"></script>
     <script src="../scripts/menu.js"></script>
     <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
     <script>
+      /**
+       * 泰勒展开计算：读取函数名和自变量，计算并显示结果
+       */
       function calc() {
         const name = document.getElementById("func").value;
         const x = parseFloat(document.getElementById("x0").value);
+        // 输入校验
         if (isNaN(x)) {
           document.getElementById("result-area").innerText =
             "error: 请输入有效数字";
           return;
         }
+        // 调用 taylor.js 中的核心函数
         const result = computeTaylor(name, x);
         document.getElementById("result-area").innerText =
           `${name}(${x}) = ${result.toFixed(8)}`;

@@ -101,10 +101,9 @@
         </div>
 
         <div class="result-footer">
-          <div class="result-header">
-            <span>计算结果</span>
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
           </div>
-          <div class="result-content" id="result-area">...</div>
           <button class="calc-icon" onclick="handleCalc()">
             <img src="../icons/calc.svg" alt="计算" />
           </button>
@@ -115,7 +114,11 @@
     <script src="../scripts/linear.js"></script>
     <script src="../scripts/menu.js"></script>
     <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
     <script>
+      /**
+       * 根据激活菜单分发到对应的矩阵运算函数
+       */
       function handleCalc() {
         const activeItem = document.querySelector(".nav-item.active");
         const menuId = activeItem.getAttribute("data-menu");
@@ -127,23 +130,30 @@
         else if (menuId === "mul") calcMul();
       }
 
+      /** LU 分解：读取矩阵，显示 L 和 U */
       function calcLU() {
         const A = getMatrix("lu_input");
         const { L, U } = computeLU(A);
         document.getElementById("result-area").innerHTML =
           "L =\n" + printMatrix(L) + "\n\nU =\n" + printMatrix(U);
       }
+
+      /** QR 分解：读取矩阵，显示 Q 和 R */
       function calcQR() {
         const A = getMatrix("qr_input");
         const { Q, R } = computeQR(A);
         document.getElementById("result-area").innerHTML =
           "Q =\n" + printMatrix(Q) + "\n\nR =\n" + printMatrix(R);
       }
+
+      /** SVD 分解（简化演示） */
       function calcSVD() {
         const A = getMatrix("svd_input");
         const result = computeSVD(A);
         document.getElementById("result-area").innerHTML = result;
       }
+
+      /** 矩阵幂：读取矩阵和幂次 n，计算 Aⁿ */
       function calcPow() {
         const A = getMatrix("pow_input");
         const n = parseInt(document.getElementById("pow_n").value);
@@ -155,6 +165,8 @@
             "Aⁿ =\n" + printMatrix(result);
         }
       }
+
+      /** 行列式：读取矩阵，计算 det(A) */
       function calcDet() {
         const A = getMatrix("det_input");
         const det = computeDet(A);
@@ -164,6 +176,8 @@
           document.getElementById("result-area").innerHTML = det.toFixed(4);
         }
       }
+
+      /** 矩阵乘法：读取两个矩阵，计算 A × B */
       function calcMul() {
         const A = getMatrix("matA");
         const B = getMatrix("matB");

@@ -58,12 +58,11 @@
           </div>
         </div>
 
-        <!-- 结果栏：标题 + 内容 + 右上角计算按钮 -->
+        <!-- 结果栏：内容 + 右上角计算按钮 -->
         <div class="result-footer">
-          <div class="result-header">
-            <span>计算结果</span>
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
           </div>
-          <div class="result-content" id="result-area">...</div>
           <button class="calc-icon" id="calc-btn" onclick="handleCalc()">
             <img src="../icons/calc.svg" alt="计算" />
           </button>
@@ -74,7 +73,11 @@
     <script src="../scripts/complex.js"></script>
     <script src="../scripts/menu.js"></script>
     <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
     <script>
+      /**
+       * 点击计算按钮时，根据当前激活的菜单执行对应计算
+       */
       function handleCalc() {
         const activeMenu = document
           .querySelector(".nav-item.active")
@@ -86,6 +89,9 @@
         }
       }
 
+      /**
+       * 四则运算：读取两个复数输入和运算符，计算并显示结果
+       */
       function calcComplex() {
         try {
           const z1 = parseComplex(document.getElementById("complexA").value);
@@ -96,6 +102,7 @@
             `\\(z_1 = ${z1.toString()}\\)<br>` +
             `\\(z_2 = ${z2.toString()}\\)<br>` +
             `结果: ${result.toString()}`;
+          // 通知 MathJax 重新渲染 LaTeX 公式
           if (window.MathJax) MathJax.typesetPromise();
         } catch (e) {
           document.getElementById("result-area").innerHTML =
@@ -103,6 +110,9 @@
         }
       }
 
+      /**
+       * 复数属性：读取一个复数，计算模长和辐角
+       */
       function calcProps() {
         try {
           const z = parseComplex(document.getElementById("prop_input").value);

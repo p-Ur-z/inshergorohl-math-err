@@ -68,10 +68,9 @@
         </div>
 
         <div class="result-footer">
-          <div class="result-header">
-            <span>计算结果</span>
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
           </div>
-          <div class="result-content" id="result-area">...</div>
           <button class="calc-icon" onclick="compute()">
             <img src="../icons/calc.svg" alt="计算" />
           </button>
@@ -82,7 +81,13 @@
     <script src="../scripts/montecarlo.js"></script>
     <script src="../scripts/menu.js"></script>
     <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
     <script>
+      /**
+       * 蒙特卡洛积分：读取参数，异步执行计算并显示结果
+       *
+       * 使用 setTimeout 延迟执行，避免长时间计算阻塞 UI 渲染。
+       */
       function compute() {
         const fExpr = document.getElementById("func").value;
         const region = document.getElementById("region").value;
@@ -91,15 +96,20 @@
         const b = Number(document.getElementById("b").value);
         const z0 = Number(document.getElementById("z0").value);
         const z1 = Number(document.getElementById("z1").value);
-        const N = 800000;
+        const N = 800000; // 采样点数
         const resultDiv = document.getElementById("result-area");
+
+        // 先显示等待提示
         resultDiv.textContent = "...";
+
+        // 延迟 50ms 执行，让 UI 先更新
         setTimeout(() => {
           const res = monteCarloIntegral(fExpr, region, R, a, b, z0, z1, N);
           if (res.error) {
             resultDiv.textContent = "函数解析错误：" + res.error;
             return;
           }
+          // 获取当前区域的中文名称
           const regionName =
             document.getElementById("region").options[
               document.getElementById("region").selectedIndex

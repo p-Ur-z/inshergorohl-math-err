@@ -1,32 +1,21 @@
 <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="7" cy="11" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="3" cy="11" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="7" cy="3" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="11" cy="3" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="18" cy="3" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="24" cy="3" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="24" cy="11" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="18" cy="11" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="10" cy="25" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="4" cy="25" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="10" cy="18" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<circle cx="4" cy="18" r="0.5" fill="#74AEB3" stroke="#74AEB3"/>
-<path d="M6 10H5C5.55228 10 6 9.55228 6 9V10Z" fill="#74AEB3"/>
-<path d="M8 4H9C8.44772 4 8 4.44772 8 5V4Z" fill="#74AEB3"/>
-<path d="M22 4H23C22.4477 4 22 4.44772 22 5V4Z" fill="#74AEB3"/>
-<path d="M20 4V5C20 4.44772 19.5523 4 19 4H20Z" fill="#74AEB3"/>
-<path d="M20 10H19C19.5523 10 20 9.55228 20 9V10Z" fill="#74AEB3"/>
-<path d="M5 19H6C5.44772 19 5 19.4477 5 20V19Z" fill="#74AEB3"/>
-<path d="M9 19V20C9 19.4477 8.55228 19 8 19H9Z" fill="#74AEB3"/>
-<path d="M22 10V9C22 9.55228 22.4477 10 23 10H22Z" fill="#74AEB3"/>
-<line x1="7" y1="3" x2="7" y2="11" stroke="#74AEB3" stroke-width="2"/>
-<line x1="21" y1="4" x2="21" y2="10" stroke="#74AEB3" stroke-width="2"/>
-<line x1="4" y1="18" x2="4" y2="25" stroke="#74AEB3" stroke-width="2"/>
-<line x1="10" y1="18" x2="10" y2="25" stroke="#74AEB3" stroke-width="2"/>
-<line x1="11" y1="3" x2="7" y2="3" stroke="#74AEB3" stroke-width="2"/>
-<line x1="24" y1="3" x2="18" y2="3" stroke="#74AEB3" stroke-width="2"/>
-<line x1="24" y1="11" x2="18" y2="11" stroke="#74AEB3" stroke-width="2"/>
-<line x1="10" y1="18" x2="4" y2="18" stroke="#74AEB3" stroke-width="2"/>
-<line x1="7" y1="11" x2="3" y2="11" stroke="#74AEB3" stroke-width="2"/>
-<path d="M18.5 17.5V21.5M18.5 25.5V21.5M18.5 21.5L22.5 18.5M18.5 21.5L23 25.5" stroke="#74AEB3" stroke-width="2"/>
+  <!-- 脸轮廓（除头顶两撮毛外左右镜像对称） -->
+  <path d="
+    M14 25
+    C16 25 18 24 20 23
+    L23.5 24 L21.5 20
+    L24 18.5 L21.5 16
+    L23 14 L23 6.5
+    L17.5 11
+    L16 7 L14 9 L11.5 7.5
+    L10.5 11
+    L5 6.5 L5 14
+    L6.5 16
+    L4 18.5 L6.5 20
+    L4.5 24 L8 23
+    C10 24 12 25 14 25 Z
+  " stroke="#2318da" stroke-width="2" stroke-linejoin="round" fill="none"/>
+  <!-- 眼睛（竖线） -->
+  <line x1="10.5" y1="14" x2="10.5" y2="18" stroke="#2318da" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="17.5" y1="14" x2="17.5" y2="18" stroke="#2318da" stroke-width="2.2" stroke-linecap="round"/>
 </svg>

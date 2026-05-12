@@ -53,10 +53,9 @@
         </div>
 
         <div class="result-footer">
-          <div class="result-header">
-            <span>计算结果</span>
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
           </div>
-          <div class="result-content" id="result-area">...</div>
           <button class="calc-icon" onclick="calcEuler()">
             <img src="../icons/calc.svg" alt="计算" />
           </button>
@@ -67,7 +66,11 @@
     <script src="../scripts/euler.js"></script>
     <script src="../scripts/menu.js"></script>
     <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
     <script>
+      /**
+       * 读取欧拉折线法的输入参数，执行计算并显示结果表格
+       */
       function calcEuler() {
         try {
           const funcExpr = document.getElementById("func").value;
@@ -75,6 +78,7 @@
           const y0 = parseFloat(document.getElementById("y0").value);
           const h = parseFloat(document.getElementById("h").value);
           const xn = parseFloat(document.getElementById("xn").value);
+          // 调用 euler.js 中的核心函数
           const result = eulerMethod(funcExpr, x0, y0, h, xn);
           document.getElementById("result-area").innerText = result;
         } catch (e) {

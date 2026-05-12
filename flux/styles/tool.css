@@ -18,7 +18,7 @@ body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  border-right: 1px solid #dce3f0;
+  border-right: 4px solid #dce3f0;
 }
 
 @media (max-width: 768px) {
@@ -140,7 +140,7 @@ body {
   gap: 16px;
   padding: 16px 24px;
   background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 4px solid #e2e8f0;
 }
 
 @media (max-width: 768px) {
@@ -166,14 +166,14 @@ body {
 }
 
 .home-link img {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
 }
 
 @media (max-width: 640px) {
   .home-link img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -251,7 +251,7 @@ select {
   width: 100%;
   padding: 10px 12px;
   border: 2px solid #e2e8f0;
-  border-radius: 10px;
+  border-radius: 6px;
   font-size: 14px;
   font-family: monospace;
   background: #fff;
@@ -305,7 +305,7 @@ textarea {
   flex-shrink: 0;
   height: 180px;
   background: #f1f5f9;
-  border-top: 1px solid #e2e8f0;
+  border-top: 4px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -324,30 +324,53 @@ textarea {
   }
 }
 
-.result-header {
-  flex-shrink: 0;
-  padding: 12px 20px;
-  background: #e9eef3;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  border-bottom: 1px solid #e2e8f0;
+.calc-icon {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  z-index: 10;
+  padding: 4px;
+}
+
+.calc-icon:hover {
+  opacity: 0.7;
+}
+
+.calc-icon img {
+  width: 28px;
+  height: 28px;
 }
 
 @media (max-width: 768px) {
-  .result-header {
-    padding: 10px 16px;
-    font-size: 12px;
+  .calc-icon {
+    top: 6px;
+    right: 14px;
+  }
+  .calc-icon img {
+    width: 24px;
+    height: 24px;
   }
 }
 
 @media (max-width: 640px) {
-  .result-header {
-    padding: 8px 12px;
-    font-size: 11px;
+  .calc-icon {
+    top: 4px;
+    right: 12px;
+  }
+  .calc-icon img {
+    width: 20px;
+    height: 20px;
   }
 }
 
+/* ── 结果展示区 ── */
 .result-content {
   flex: 1;
   overflow-y: auto;
@@ -375,50 +398,29 @@ textarea {
   }
 }
 
-.calc-icon {
-  position: absolute;
-  top: 50px;
-  right: 16px;
+/* ── 拖拽手柄 ── */
+.resize-handle {
+  flex-shrink: 0;
   background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s;
-  z-index: 10;
-  padding: 4px;
+  transition: background 0.2s;
+  z-index: 20;
 }
 
-.calc-icon:hover {
-  opacity: 0.7;
+/* 水平拖拽（侧边栏宽度） */
+.resize-handle-h {
+  width: 4px;
+  cursor: col-resize;
 }
 
-.calc-icon img {
-  width: 28px;
-  height: 28px;
+/* 垂直拖拽（结果栏高度） */
+.resize-handle-v {
+  height: 4px;
+  cursor: row-resize;
 }
 
-@media (max-width: 768px) {
-  .calc-icon {
-    top: 44px;
-    right: 14px;
-  }
-  .calc-icon img {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-@media (max-width: 640px) {
-  .calc-icon {
-    top: 38px;
-    right: 12px;
-  }
-  .calc-icon img {
-    width: 20px;
-    height: 20px;
-  }
+.resize-handle:hover,
+.resize-handle.resize-active {
+  background: var(--primary);
 }
 
 .err {

@@ -131,10 +131,9 @@
         </div>
 
         <div class="result-footer">
-          <div class="result-header">
-            <span>计算结果</span>
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
           </div>
-          <div class="result-content" id="result-area">...</div>
           <button class="calc-icon" onclick="handleCalc()">
             <img src="../icons/calc.svg" alt="计算" />
           </button>
@@ -145,16 +144,24 @@
     <script src="../scripts/numerical.js"></script>
     <script src="../scripts/menu.js"></script>
     <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
     <script>
+      /**
+       * 根据激活菜单分发到对应的积分计算函数
+       */
       function handleCalc() {
         const activeItem = document.querySelector(".nav-item.active");
         const menuId = activeItem.getAttribute("data-menu");
-        if (menuId === "integral1") calc1();
-        else if (menuId === "integral2") calc2();
-        else if (menuId === "integral3") calcC();
-        else if (menuId === "integral4") calc3();
+        if (menuId === "integral1")
+          calc1(); // 定积分
+        else if (menuId === "integral2")
+          calc2(); // 二重积分
+        else if (menuId === "integral3")
+          calcC(); // 曲线积分
+        else if (menuId === "integral4") calc3(); // 三重积分
       }
 
+      /** 定积分：一维函数 + 区间 + 分段数 + 方法 */
       function calc1() {
         const result = definiteIntegral(
           f1.value,
@@ -167,6 +174,7 @@
           `${result.value}<br><span class="err">误差阶：${result.error}</span>`;
       }
 
+      /** 二重积分：f(x,y) + 矩形区域 + 分段数 */
       function calc2() {
         const result = doubleIntegral(
           f2.value,
@@ -179,6 +187,7 @@
         document.getElementById("result-area").innerHTML = `结果: ${result}`;
       }
 
+      /** 曲线积分：参数方程 + 参数区间 + 类型 */
       function calcC() {
         const result = curveIntegral(
           cx.value,
@@ -191,6 +200,7 @@
         document.getElementById("result-area").innerHTML = `结果: ${result}`;
       }
 
+      /** 三重积分：f(x,y,z) + 长方体区域 + 分段数 */
       function calc3() {
         const result = tripleIntegral(
           f3.value,
