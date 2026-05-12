@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>欧拉折线法</title>
+    <link rel="stylesheet" href="../styles/body.css" />
+    <link rel="stylesheet" href="../styles/headline.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/input.css" />
+    <link rel="stylesheet" href="../styles/lable.css" />
+    <link rel="stylesheet" href="../styles/button.css" />
+    <link rel="stylesheet" href="../styles/result.css" />
+    <link rel="stylesheet" href="../styles/back.css" />
+    <link rel="stylesheet" href="../styles/lable.css" />
+    <link rel="stylesheet" href="../styles/toggle.css" />
+  </head>
+
+  <body>
+    <h1>欧拉折线法</h1>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <h2>欧拉折线法 \(\frac{dy}{dx} = f(x, y)\)</h2>
+        <span class="toggle-icon">
+          <img src="../icons/expand.svg" alt="展开" width="20" height="20" />
+        </span>
+      </div>
+      <div class="card-content">
+        <label>微分方程 \(\frac{dy}{dx} = f(x, y)\)</label>
+        <input id="func" value="x + y" placeholder="例如：x + y 或 x*y" />
+
+        <label>初始条件 \(x_0\)</label>
+        <input id="x0" type="number" value="0" />
+
+        <label>初始条件 \(y_0\)</label>
+        <input id="y0" type="number" value="1" />
+
+        <label>步长 \(h\)</label>
+        <input id="h" type="number" value="0.1" step="0.01" />
+
+        <label>终点 \(x_n\)</label>
+        <input id="xn" type="number" value="1" />
+
+        <button onclick="calcEuler()">开始计算</button>
+
+        <div id="result" class="result"></div>
+      </div>
+    </div>
+
+    <script src="../scripts/toggle.js"></script>
+    <script src="../scripts/euler.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script>
+      function calcEuler() {
+        try {
+          const funcExpr = document.getElementById("func").value;
+          const x0 = parseFloat(document.getElementById("x0").value);
+          const y0 = parseFloat(document.getElementById("y0").value);
+          const h = parseFloat(document.getElementById("h").value);
+          const xn = parseFloat(document.getElementById("xn").value);
+
+          const result = eulerMethod(funcExpr, x0, y0, h, xn);
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerText = result;
+
+          if (window.MathJax) {
+            MathJax.typesetPromise();
+          }
+        } catch (e) {
+          document.getElementById("result").innerText =
+            "错误：请输入有效的函数表达式（如 x + y）。";
+        }
+      }
+    </script>
+
+    <a class="back" href="../index.html">返回主页</a>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>泰勒展开</title>
+    <link rel="stylesheet" href="../styles/body.css" />
+    <link rel="stylesheet" href="../styles/headline.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/input.css" />
+    <link rel="stylesheet" href="../styles/button.css" />
+    <link rel="stylesheet" href="../styles/result.css" />
+    <link rel="stylesheet" href="../styles/back.css" />
+    <link rel="stylesheet" href="../styles/lable.css" />
+    <link rel="stylesheet" href="../styles/toggle.css" />
+  </head>
+  <body>
+    <h1>泰勒展开</h1>
+
+    <div class="card">
+      <div class="card-header" onclick="toggleCard(this)">
+        <h2>泰勒展开</h2>
+        <span class="toggle-icon">
+          <img src="../icons/expand.svg" alt="展开" width="20" height="20" />
+        </span>
+      </div>
+      <div class="card-content">
+        <select id="func">
+          <option value="sin">sin(x)</option>
+          <option value="cos">cos(x)</option>
+          <option value="tan">tan(x)</option>
+          <option value="arcsin">arcsin(x)</option>
+          <option value="Si">Si(x)</option>
+          <option value="Ci" selected>Ci(x)</option>
+          <option value="Ei">Ei(x)</option>
+          <option value="Li">Li(x)</option>
+          <option value="erf">erf(x)</option>
+          <option value="exp">exp(x)</option>
+        </select>
+
+        <input id="x0" placeholder="请输入自变量 x₀" value="1" />
+        <button onclick="calc()">计算</button>
+        <div id="out" class="result">结果将显示在这里</div>
+      </div>
+    </div>
+
+    <script src="../scripts/toggle.js"></script>
+    <script src="../scripts/taylor.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script>
+      function calc() {
+        const name = document.getElementById("func").value;
+        const x = parseFloat(document.getElementById("x0").value);
+
+        if (isNaN(x)) {
+          document.getElementById("out").innerText = "error: 请输入有效数字";
+          return;
+        }
+
+        const result = computeTaylor(name, x);
+        document.getElementById("out").innerText =
+          `${name}(${x}) = ${result.toFixed(8)}`;
+      }
+    </script>
+
+    <a class="back" href="../index.html">返回主页</a>
+  </body>
+</html>

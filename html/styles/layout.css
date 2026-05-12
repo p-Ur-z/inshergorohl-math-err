@@ -1,15 +1,209 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+/* 基础重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.card {
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f0f4ff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* VSCode 风格布局 */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* 侧边栏 - 简洁 */
+.sidebar {
+  width: 220px;
+  background: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s ease;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 48px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px;
+  border-bottom: 1px solid #333;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-toggle:hover {
+  background: #2d2d2d;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #cccccc;
+  font-size: 13px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+.nav-item.active {
+  background: #0f62ac;
+  color: #ffffff;
+}
+
+.nav-item img {
+  width: 18px;
+  height: 18px;
+  filter: invert(0.7);
+  flex-shrink: 0;
+}
+
+.nav-item.active img {
+  filter: invert(1);
+}
+
+.nav-item span {
+  overflow: hidden;
+}
+
+.sidebar.collapsed .nav-item span {
+  display: none;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+/* 右侧主内容 */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f0f4ff;
+  overflow: hidden;
+}
+
+/* 标题栏 */
+.title-bar {
+  padding: 20px 32px 0 32px;
+  background: #f0f4ff;
+}
+
+.title-bar h1 {
+  display: block;
+  font-size: 24px;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* 内容区 */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 32px;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #dbe5ff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: monospace;
   background: #fff;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-row textarea {
+  flex: 1;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 9999px;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+.result {
+  margin-top: 16px;
+  padding: 14px;
+  background: #f8faff;
+  border-radius: 12px;
+  font-size: 13px;
   border: 1px solid #e0e8ff;
+  font-family: monospace;
+}
+
+.back {
+  display: none;
 }

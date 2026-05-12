@@ -5,8 +5,12 @@
   background: #4f46e5;
   color: #fff;
   text-decoration: none;
-  border-radius: 9999px;
-  width: 300px; /* ✅ 这里变长了 */
+  border-radius: 9999px; /* 6 */
+  width: 80vh;
   font-weight: bold;
   text-align: center;
+}
+
+.back:hover {
+  background: #4338ca;
 }

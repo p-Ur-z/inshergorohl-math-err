@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数值积分</title>
+    <link rel="stylesheet" href="../styles/body.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/headline.css" />
+    <link rel="stylesheet" href="../styles/input.css" />
+    <link rel="stylesheet" href="../styles/button.css" />
+    <link rel="stylesheet" href="../styles/result.css" />
+    <link rel="stylesheet" href="../styles/err.css" />
+    <link rel="stylesheet" href="../styles/back.css" />
+    <link rel="stylesheet" href="../styles/toggle.css" />
+  </head>
+  <body>
+    <h1>数值积分</h1>
+
+    <div class="grid">
+      <!-- 定积分 -->
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <h2>定积分 ∫ f(x) dx</h2>
+          <span class="toggle-icon">
+            <img src="../icons/expand.svg" alt="展开" width="20" height="20" />
+          </span>
+        </div>
+        <div class="card-content">
+          <input id="f1" value="Math.sin(x)" />
+          <input id="a1" value="0" placeholder="下限" />
+          <input id="b1" value="3.14159" placeholder="上限" />
+          <input id="n1" value="200" placeholder="分段数" />
+          <select id="m1">
+            <option value="left">左黎曼和</option>
+            <option value="right">右黎曼和</option>
+            <option value="mid">中点黎曼和</option>
+            <option value="trapezoid">梯形法</option>
+            <option value="parabola">抛物线法</option>
+          </select>
+          <button onclick="calc1()">计算</button>
+          <div class="result" id="r1"></div>
+        </div>
+      </div>
+
+      <!-- 二重积分 -->
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <h2>二重积分 ∬ f(x,y) dxdy</h2>
+          <span class="toggle-icon">
+            <img src="../icons/expand.svg" alt="展开" width="20" height="20" />
+          </span>
+        </div>
+        <div class="card-content">
+          <input id="f2" value="x*x+y*y" />
+          <div style="display: flex; gap: 6px">
+            <input id="x1" value="0" /><input id="x2" value="1" />
+            <input id="y1" value="0" /><input id="y2" value="1" />
+          </div>
+          <input id="n2" value="60" />
+          <select id="m2">
+            <option value="left">左黎曼和</option>
+            <option value="right">右黎曼和</option>
+            <option value="mid">中点黎曼和</option>
+            <option value="trapezoid">梯形法</option>
+            <option value="parabola">抛物线法(辛普森法则)</option>
+          </select>
+          <button onclick="calc2()">计算</button>
+          <div class="result" id="r2"></div>
+        </div>
+      </div>
+
+      <!-- 曲线积分 -->
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <h2>曲线积分</h2>
+          <span class="toggle-icon">
+            <img src="../icons/expand.svg" alt="展开" width="20" height="20" />
+          </span>
+        </div>
+        <div class="card-content">
+          <input id="cx" value="Math.cos(t)" />
+          <input id="cy" value="Math.sin(t)" />
+          <input id="t0" value="0" />
+          <input id="t1" value="6.28318" />
+          <input id="nc" value="400" />
+          <select id="ct">
+            <option value="I">I 类（标量）</option>
+            <option value="II">II 类（向量）</option>
+          </select>
+          <button onclick="calcC()">计算</button>
+          <div class="result" id="rc"></div>
+        </div>
+      </div>
+
+      <!-- 三重积分 -->
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <h2>三重积分 ∭ f(x,y,z) dxdydz</h2>
+          <span class="toggle-icon">
+            <img src="../icons/expand.svg" alt="展开" width="20" height="20" />
+          </span>
+        </div>
+        <div class="card-content">
+          <input id="f3" value="x+y+z" />
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <input id="tx0" value="0" /><input id="tx1" value="1" />
+            <input id="ty0" value="0" /><input id="ty1" value="1" />
+            <input id="tz0" value="0" /><input id="tz1" value="1" />
+          </div>
+          <input id="n3" value="40" />
+          <select id="m3">
+            <option value="left">左黎曼和</option>
+            <option value="right">右黎曼和</option>
+            <option value="mid">中点黎曼和</option>
+            <option value="trapezoid">梯形法</option>
+            <option value="parabola">抛物线法(辛普森法则)</option>
+          </select>
+          <button onclick="calc3()">计算</button>
+          <div class="result" id="r3"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../scripts/toggle.js"></script>
+    <script src="../scripts/numerical.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script>
+      function calc1() {
+        const fExpr = document.getElementById("f1").value;
+        const a = +document.getElementById("a1").value;
+        const b = +document.getElementById("b1").value;
+        const n = +document.getElementById("n1").value;
+        const method = document.getElementById("m1").value;
+
+        const result = definiteIntegral(fExpr, a, b, n, method);
+        document.getElementById("r1").innerHTML =
+          `<b>${result.value}</b><div class="err">误差阶：${result.error}</div>`;
+      }
+
+      function calc2() {
+        const fExpr = document.getElementById("f2").value;
+        const x1 = +document.getElementById("x1").value;
+        const x2 = +document.getElementById("x2").value;
+        const y1 = +document.getElementById("y1").value;
+        const y2 = +document.getElementById("y2").value;
+        const n = +document.getElementById("n2").value;
+
+        const result = doubleIntegral(fExpr, x1, x2, y1, y2, n);
+        document.getElementById("r2").innerText = `结果 ≈ ${result}`;
+      }
+
+      function calcC() {
+        const xExpr = document.getElementById("cx").value;
+        const yExpr = document.getElementById("cy").value;
+        const t0 = +document.getElementById("t0").value;
+        const t1 = +document.getElementById("t1").value;
+        const n = +document.getElementById("nc").value;
+        const type = document.getElementById("ct").value;
+
+        const result = curveIntegral(xExpr, yExpr, t0, t1, n, type);
+        document.getElementById("rc").innerText = `结果 ≈ ${result}`;
+      }
+
+      function calc3() {
+        const fExpr = document.getElementById("f3").value;
+        const x0 = +document.getElementById("tx0").value;
+        const x1 = +document.getElementById("tx1").value;
+        const y0 = +document.getElementById("ty0").value;
+        const y1 = +document.getElementById("ty1").value;
+        const z0 = +document.getElementById("tz0").value;
+        const z1 = +document.getElementById("tz1").value;
+        const n = +document.getElementById("n3").value;
+
+        const result = tripleIntegral(fExpr, x0, x1, y0, y1, z0, z1, n);
+        document.getElementById("r3").innerText = `结果 ≈ ${result}`;
+      }
+    </script>
+
+    <a class="back" href="../index.html">返回主页</a>
+  </body>
+</html>

@@ -97,66 +97,40 @@
       <div class="card">
         <h2>数值积分</h2>
         <p>黎曼和、梯形法、抛物线法。</p>
-        <a class="btn" href="html/index/lic.html">打开工具</a>
+        <a class="btn" href="html/tools/lic.html">打开工具</a>
       </div>
 
       <div class="card">
         <h2>线性代数</h2>
         <p>行列式、逆矩阵、秩。</p>
-        <a class="btn" href="html/index/matrix.html">打开工具</a>
+        <a class="btn" href="html/tools/matrix.html">打开工具</a>
       </div>
 
       <div class="card">
         <h2>蒙特卡洛积分</h2>
         <p>圆、球的积分随机撒点法</p>
-        <a class="btn" href="html/index/idc.html">打开工具</a>
+        <a class="btn" href="html/tools/idc.html">打开工具</a>
       </div>
 
       <div class="card">
         <h2>复数计算</h2>
         <p>支持加减乘除、模长、辐角、共轭及极坐标转换。</p>
-        <a class="btn" href="html/index/complex.html">打开工具</a>
+        <a class="btn" href="html/tools/complex.html">打开工具</a>
       </div>
 
       <div class="card">
         <h2>欧拉折线法</h2>
         <p>常微分方程初值问题的数值解法。</p>
-        <a class="btn" href="html/index/em.html">打开工具</a>
+        <a class="btn" href="html/tools/em.html">打开工具</a>
       </div>
 
       <div class="card">
         <h2>泰勒展开</h2>
         <p>使用math.js库初等函数。</p>
-        <a class="btn" href="html/index/taylor.html">打开工具</a>
+        <a class="btn" href="html/tools/taylor.html">打开工具</a>
       </div>
     </div>
 
     <footer>Copyright 2026 – 2026 p-Ur-z · Pure HTML / CSS / JS</footer>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const links = document.querySelectorAll("a[href]:not(.disabled)");
-
-        links.forEach((link) => {
-          if (link.href.startsWith("http")) return;
-
-          link.addEventListener("click", function (e) {
-            e.preventDefault();
-            const target = this.href;
-
-            window.location.href = target;
-
-            setTimeout(() => {
-              if (
-                window.location.pathname.endsWith("index.html") ||
-                window.location.pathname === "/"
-              ) {
-                window.location.href = "na.html";
-              }
-            }, 1000);
-          });
-        });
-      });
-    </script>
   </body>
 </html>

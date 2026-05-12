@@ -1,16 +1,9 @@
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  border-radius: 10px;
-  border: 2px solid #dbe5ff;
-  font-size: 14px;
-}
-
+input,
 select {
   width: 100%;
   padding: 10px 12px;
-  margin-bottom: 12px;
+  margin-top: 5px;
+  margin-bottom: 20px;
   border: 2px solid #dbe5ff;
   border-radius: 10px;
   box-sizing: border-box;
