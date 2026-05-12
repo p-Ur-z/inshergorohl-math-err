@@ -1,0 +1,146 @@
+<!-- =================== euler_method.html =================== -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>欧拉折线法 · 微分方程</title>
+
+<style>
+body {
+ margin: 0;
+ padding: 40px;
+ background: #f0f4ff;
+ font-family: Arial, sans-serif;
+}
+h1 {
+ text-align: center;
+ color: #1e293b;
+ margin-bottom: 40px;
+}
+.card {
+ background: #fff;
+ max-width: 700px;
+ margin: 0 auto;
+ border-radius: 16px;
+ padding: 24px;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+ border: 1px solid #e0e8ff;
+}
+label {
+ display: block;
+ margin-top: 14px;
+ font-size: 14px;
+ color: #374151;
+}
+input {
+ width: 100%;
+ padding: 10px;
+ margin-top: 6px;
+ border-radius: 10px;
+ border: 2px solid #dbe5ff;
+ font-size: 14px;
+}
+button {
+ width: 100%;
+ padding: 12px;
+ border: none;
+ border-radius: 9999px;
+ background: #4f46e5;
+ color: #fff;
+ font-size: 14px;
+ font-weight: bold;
+ cursor: pointer;
+ margin-top: 10px;
+}
+button:hover {
+ background: #4338ca;
+}
+.result {
+ margin-top: 20px;
+ padding: 14px;
+ background: #f8faff;
+ border-radius: 12px;
+ font-family: monospace;
+ white-space: pre;
+ border: 1px solid #e0e8ff;
+ overflow-x: auto;
+}
+.back-btn {
+ padding: 10px 20px;
+ border: none;
+ border-radius: 9999px;
+ background: #4f46e5;
+ color: #fff;
+ font-size: 14px;
+ cursor: pointer;
+ margin-top: 30px;
+ display: block;
+ margin-left: auto;
+ margin-right: auto;
+}
+.back-btn:hover {
+ background: #4338ca;
+}
+</style>
+</head>
+
+<body>
+
+<h1>欧拉折线法 (Euler's Method)</h1>
+
+<div class="card">
+ <label>微分方程 dy/dx = f(x, y)</label>
+ <input id="func" value="x + y" placeholder="例如：x + y 或 x*y">
+
+ <label>初始条件 x₀</label>
+ <input id="x0" type="number" value="0">
+
+ <label>初始条件 y₀</label>
+ <input id="y0" type="number" value="1">
+
+ <label>步长 h</label>
+ <input id="h" type="number" value="0.1" step="0.01">
+
+ <label>终点 xₙ</label>
+ <input id="xn" type="number" value="1">
+
+ <button onclick="calcEuler()">开始计算</button>
+
+ <div id="result" class="result"></div>
+</div>
+
+<button class="back-btn" onclick="location.href='index.html'">
+  返回主页
+</button>
+
+<script>
+function calcEuler() {
+ try {
+ var f = new Function('x', 'y', 'return ' + document.getElementById('func').value + ';');
+ var x0 = parseFloat(document.getElementById('x0').value);
+ var y0 = parseFloat(document.getElementById('y0').value);
+ var h = parseFloat(document.getElementById('h').value);
+ var xn = parseFloat(document.getElementById('xn').value);
+
+ var x = x0;
+ var y = y0;
+ var steps = Math.round((xn - x0) / h);
+ var output = "x\t\t| y\n";
+ output += "--------------------\n";
+ output += x.toFixed(4) + "\t| " + y.toFixed(6) + "\n";
+
+ for (var i = 0; i < steps; i++) {
+ y = y + h * f(x, y);
+ x = x + h;
+ output += x.toFixed(4) + "\t| " + y.toFixed(6) + "\n";
+ }
+
+ document.getElementById('result').innerText = output;
+ } catch (e) {
+ document.getElementById('result').innerText = "错误：请输入有效的函数表达式（如 x + y）。";
+ }
+}
+</script>
+
+</body>
+</html>
