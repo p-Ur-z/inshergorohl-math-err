@@ -1,0 +1,149 @@
+<!-- =================== index.html =================== -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flux1.4</title>
+
+    <style>
+        :root {
+            --bg: #f0f4ff;
+            --card: #ffffff;
+            --border: #e0e8ff;
+            --text: #1e293b;
+            --text-2: #64748b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 { font-size: 16px; color: var(--text); margin-bottom: 10px; }
+        .card p { font-size: 14px; color: var(--text-2); line-height: 1.5; margin-bottom: 20px; }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 9999px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover { background: var(--primary-hover); }
+
+        footer {
+            text-align: center;
+            color: var(--text-2);
+            font-size: 13px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Flux 数学工具箱 v1.4</h1>
+
+<div class="grid">
+    <div class="card">
+        <h2>数值积分</h2>
+        <p>黎曼和、梯形法、抛物线法。</p>
+        <a class="btn" href="lic.html">打开工具</a>
+    </div>
+
+    <div class="card">
+        <h2>线性代数</h2>
+        <p>行列式、逆矩阵、秩。</p>
+        <a class="btn" href="matrix.html">打开工具</a>
+    </div>
+
+    <div class="card">
+        <h2>蒙特卡洛积分</h2>
+        <p>圆、球的积分随机撒点法</p>
+        <a class="btn" href="idc.html">打开工具</a>
+    </div>
+
+    <div class="card">
+        <h2>复数计算</h2>
+        <p>支持加减乘除、模长、辐角、共轭及极坐标转换。</p>
+        <a class="btn" href="complex.html">打开工具</a>
+    </div>
+
+    <div class="card">
+        <h2>欧拉折线法</h2>
+        <p>常微分方程初值问题的数值解法。</p>
+        <a class="btn" href="em.html">打开工具</a>
+    </div>
+
+    <div class="card">
+        <h2>泰勒展开</h2>
+        <p>使用math.js库初等函数。</p>
+        <a class="btn" href="taylor.html">打开工具</a>
+    </div>
+</div>
+
+<footer>
+    © 2026 – 2026 p-Ur-z · Pure HTML / CSS / JS
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const links = document.querySelectorAll('a[href]:not(.disabled)');
+    
+    links.forEach(link => {
+        if (link.href.startsWith('http')) return;
+        
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = this.href;
+            
+            window.location.href = target;
+            
+            setTimeout(() => {
+                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+                    window.location.href = 'na.html';
+                }
+            }, 1000);
+        });
+    });
+});
+</script>
+
+</body>
+</html>
