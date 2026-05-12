@@ -3,226 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flux Math Toolkit v1.3</title>
+    <title>Flux v1.3 | Math Toolkit</title>
     <style>
-        /* --- 基础重置与全局样式 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --primary: #4361ee;
-            --primary-hover: #3a56d4;
-            --text-main: #2b2d42;
-            --text-secondary: #6c757d;
-            --shadow: rgba(0, 0, 0, 0.05);
-            --radius: 12px;
+            --bg-dark: #0a0a0f;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --accent: #00e5ff; /* 赛博青 */
+            --accent-glow: rgba(0, 229, 255, 0.3);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* --- 主容器 --- */
-        .container {
+        /* 动态背景 */
+        #particles-js {
+            position: fixed;
             width: 100%;
-            max-width: 1000px;
+            height: 100%;
+            z-index: -1;
         }
 
-        /* --- 头部 Header --- */
+        /* 布局容器 */
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* 头部：极简大字体 */
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 80px;
         }
-
-        .logo {
-            font-size: 14px;
+        header .subtitle {
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--accent);
             margin-bottom: 10px;
+            text-transform: uppercase;
         }
-
-        .version {
-            display: inline-block;
-            background: #e9ecef;
+        header h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+        header p {
             color: var(--text-secondary);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            margin-top: 15px;
+            font-size: 1.1rem;
         }
 
-        /* --- 卡片网格 Grid --- */
+        /* 网格布局 */
         .grid {
             display: grid;
-            /* 在大屏幕上一行两列，小屏幕自动适应 */
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
 
-        /* --- 单个卡片 Card --- */
+        /* 玻璃卡片 */
         .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: 0 4px 6px var(--shadow);
-            border: 1px solid rgba(0,0,0,0.03);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
         }
 
-        /* 禁用状态的卡片 */
-        .card.disabled {
-            opacity: 0.7;
-            background: #f8f9fa;
-        }
-        
-        .card.disabled:hover {
-            transform: none;
-            box-shadow: 0 4px 6px var(--shadow);
+        .card:hover::before {
+            opacity: 1;
         }
 
-        /* --- 卡片内容排版 --- */
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            background: #eef2ff;
-            color: var(--primary);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        /* 图标样式 */
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 8px var(--accent-glow));
         }
 
+        /* 文字 */
         .card h2 {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
+            font-weight: 600;
             margin-bottom: 10px;
-            color: var(--text-main);
         }
-
         .card p {
             font-size: 0.95rem;
             color: var(--text-secondary);
             line-height: 1.6;
-            margin-bottom: 25px;
-            flex-grow: 1; /* 让文字撑满空间，使按钮始终贴底 */
+            flex-grow: 1;
         }
 
-        .card-link {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 10px 18px;
-            border-radius: 8px;
+        /* 按钮 */
+        .btn {
+            margin-top: 30px;
+            padding: 12px 24px;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: background 0.2s ease;
+            font-weight: 500;
             text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        .btn:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
-        .card-link:hover {
-            background: var(--primary-hover);
+        /* 禁用状态 */
+        .card.disabled {
+            opacity: 0.6;
+            filter: grayscale(0.5);
         }
-
-        .disabled-tag {
-            display: inline-block;
-            background: #dee2e6;
-            color: #6c757d;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-align: center;
+        .card.disabled .btn {
             cursor: not-allowed;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .card.disabled:hover {
+            transform: none;
+            border-color: var(--glass-border);
+            box-shadow: none;
         }
 
-        /* --- 页脚 Footer --- */
+        /* 页脚 */
         footer {
             text-align: center;
-            margin-top: 60px;
+            margin-top: 100px;
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- 头部 -->
+    <div id="particles-js"></div>
+
+    <div class="wrapper">
         <header>
-            <div class="logo">FLUX</div>
-            <h1>Math Toolkit</h1>
-            <span class="version">v1.3 正式版</span>
+            <div class="subtitle">Flux Toolkit</div>
+            <h1>Math v1.3</h1>
+            <p>Pure HTML / CSS / JS · High Performance Computing</p>
         </header>
 
-        <!-- 主体网格 -->
         <main class="grid">
-            
-            <!-- 卡片 1: 数值积分 -->
+            <!-- 卡片 1 -->
             <div class="card">
-                <div class="card-icon">∫</div>
-                <h2>Lik · 数值积分</h2>
+                <div class="icon">∫</div>
+                <h2>Lik · Numerical</h2>
                 <p>黎曼和估算，输入函数与区间，快速得到近似结果。</p>
-                <a href="#" class="card-link">打开工具</a>
+                <a href="#" class="btn">Launch Tool</a>
             </div>
 
-            <!-- 卡片 2: 线性代数 -->
+            <!-- 卡片 2 -->
             <div class="card">
-                <div class="card-icon">Matrix</div>
-                <h2>Linear Algebra</h2>
+                <div class="icon">[ ]</div>
+                <h2>Matrix · Linear</h2>
                 <p>行列式、逆矩阵、秩，告别繁琐手算。</p>
-                <a href="#" class="card-link">打开工具</a>
+                <a href="#" class="btn">Launch Tool</a>
             </div>
 
-            <!-- 卡片 3: 蒙特卡洛积分 -->
+            <!-- 卡片 3 -->
             <div class="card">
-                <div class="card-icon">Ω</div>
-                <h2>ldc · 蒙特卡洛积分</h2>
+                <div class="icon">Ω</div>
+                <h2>ldc · Monte Carlo</h2>
                 <p>圆、球、复杂区域积分，随机撒点法。</p>
-                <a href="#" class="card-link">打开工具</a>
+                <a href="#" class="btn">Launch Tool</a>
             </div>
 
-            <!-- 卡片 4: 开发中 (禁用状态) -->
+            <!-- 卡片 4 (开发中) -->
             <div class="card disabled">
-                <div class="card-icon">ℂ</div>
-                <h2>Complex · 复数计算</h2>
-                <p>支持复数的加减乘除、共轭、模长及极坐标转换，后期更出幂运算。</p>
-                <div class="disabled-tag">Coming Soon</div>
+                <div class="icon">ℂ</div>
+                <h2>Complex · v1.4</h2>
+                <p>支持复数的加减乘除、共轭、模长及极坐标转换。</p>
+                <div class="btn">Coming Soon</div>
             </div>
-
         </main>
 
-        <!-- 页脚 -->
         <footer>
-            <p>© 2024 – 2026 p-Ur-z · Flux v1.3 · Pure HTML / CSS / JS</p>
+            <p>© 2024 – 2026 p-Ur-z · Flux v1.3</p>
         </footer>
     </div>
 
+    <!-- 粒子效果 JS -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 50, density: { enable: true, value_area: 800 } },
+                color: { value: "#00e5ff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.3, random: true },
+                size: { value: 2, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#00e5ff",
+                    opacity: 0.1,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out"
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: false }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
 </body>
 </html>
