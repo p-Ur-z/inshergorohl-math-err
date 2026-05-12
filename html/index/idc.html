@@ -2,157 +2,120 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <title>非矩形区域积分</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>蒙特卡洛积分</title>
     <style>
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
-        background: #f5f7fa;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        margin: 0;
-      }
+            .header {
+              text-align: center;
+              margin-bottom: 28px;
+              padding-bottom: 20px;
+              border-bottom: 1px solid #f0f0f0;
+            }
 
-      .card {
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-        padding: 32px;
-        width: 100%;
-        max-width: 520px;
-        border: 1px solid #eaeaea;
-      }
+            .title {
+              font-size: 20px;
+              font-weight: 600;
+              color: #1a1a1a;
+              margin: 0 0 6px 0;
+              letter-spacing: -0.3px;
+            }
 
-      .header {
-        text-align: center;
-        margin-bottom: 28px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #f0f0f0;
-      }
+            .subtitle {
+              font-size: 14px;
+              color: #666;
+              margin: 0;
+              font-weight: 400;
+            }
 
-      .title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #1a1a1a;
-        margin: 0 0 6px 0;
-        letter-spacing: -0.3px;
-      }
+            .form-group {
+              margin-bottom: 20px;
+            }
 
-      .subtitle {
-        font-size: 14px;
-        color: #666;
-        margin: 0;
-        font-weight: 400;
-      }
+            .input,
+            .select {
+              width: 100%;
+              padding: 12px 14px;
+              border: 1px solid #ddd;
+              border-radius: 8px;
+              font-size: 14px;
+              background: #fff;
+              transition: all 0.2s ease;
+              box-sizing: border-box;
+              color: #333;
+            }
 
-      .form-group {
-        margin-bottom: 20px;
-      }
+            .input:focus,
+            .select:focus {
+              outline: none;
+              border-color: #4a90e2;
+              box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            }
 
-      .label {
-        display: block;
-        font-size: 13px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 6px;
-      }
+            .params-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 12px;
+              margin-bottom: 20px;
+            }
 
-      .input,
-      .select {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 14px;
-        background: #fff;
-        transition: all 0.2s ease;
-        box-sizing: border-box;
-        color: #333;
-      }
+            .btn {
+              width: 100%;
+              padding: 14px;
+              border: none;
+              border-radius: 8px;
+              font-size: 15px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              margin-top: 8px;
+              letter-spacing: 0.2px;
+            }
 
-      .input:focus,
-      .select:focus {
-        outline: none;
-        border-color: #4a90e2;
-        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-      }
+            .btn-primary {
+              background: #1a73e8;
+              color: white;
+              box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
+            }
 
-      .params-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin-bottom: 20px;
-      }
+            .btn-primary:hover {
+              background: #1669d6;
+              box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            }
 
-      .btn {
-        width: 100%;
-        padding: 14px;
-        border: none;
-        border-radius: 8px;
-        font-size: 15px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        margin-top: 8px;
-        letter-spacing: 0.2px;
-      }
+            .btn-back {
+              background: #1a73e8;
+              color: white;
+              box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
+              margin-top: 12px;
+            }
 
-      .btn-primary {
-        background: #1a73e8;
-        color: white;
-        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
-      }
+            .btn-back:hover {
+              background: #1669d6;
+              box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            }
 
-      .btn-primary:hover {
-        background: #1669d6;
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-      }
-
-      .btn-back {
-        background: #1a73e8;
-        color: white;
-        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
-        margin-top: 12px;
-      }
-
-      .btn-back:hover {
-        background: #1669d6;
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-      }
-
-      .output {
-        margin-top: 24px;
-        padding: 16px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        border: 1px solid #eee;
-        font-family: "SF Mono", Monaco, "Courier New", monospace;
-        font-size: 13px;
-        line-height: 1.6;
-        color: #2d3748;
-        white-space: pre-wrap;
-        word-break: break-all;
-        min-height: 80px;
-      }
-
-      .select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        padding-right: 40px;
-      }
+            .result {
+              margin-top: 24px;
+              padding: 16px;
+              background: #f8f9fa;
+              border-radius: 8px;
+              border: 1px solid #eee;
+              font-family: "SF Mono", Monaco, "Courier New", monospace;
+              font-size: 13px;
+              line-height: 1.6;
+              color: #2d3748;
+              white-space: pre-wrap;
+              word-break: break-all;
+              min-height: 80px;
+            }
+      w
     </style>
   </head>
   <body>
     <div class="card">
       <div class="header">
-        <h1 class="title">非矩形区域积分</h1>
-        <p class="subtitle">二重 / 三重积分 · 蒙特卡洛方法</p>
+        <h1 class="title">蒙特卡洛积分</h1>
+        <p class="subtitle">圆、球的积分随机撒点法</p>
       </div>
 
       <div class="form-group">
@@ -199,7 +162,7 @@
         返回主界面
       </button>
 
-      <div class="output" id="output">点击"开始计算"查看结果</div>
+      <div class="result" id="result">点击"开始计算"查看结果</div>
     </div>
 
     <script>
@@ -216,8 +179,8 @@
         let inside = 0,
           sum = 0;
 
-        const output = document.getElementById("output");
-        output.textContent = "计算中...";
+        const result = document.getElementById("result");
+        result.textContent = "计算中...";
 
         setTimeout(() => {
           for (let i = 0; i < N; i++) {
@@ -238,7 +201,7 @@
               try {
                 sum += eval(f);
               } catch (e) {
-                output.textContent = "函数解析错误：" + e.message;
+                result.textContent = "函数解析错误：" + e.message;
                 return;
               }
             }
@@ -263,7 +226,7 @@
               (r === "sphere" ? (3 / 5) * Math.PI * R ** 5 : 1)) *
             100;
 
-          output.textContent =
+          result.textContent =
             `计算结果\n` +
             `采样点数：${N.toLocaleString()}\n` +
             `有效样本：${inside.toLocaleString()} (${((inside / N) * 100).toFixed(1)}%)\n` +

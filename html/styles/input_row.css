@@ -1,0 +1,7 @@
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+.input-row textarea {
+  flex: 1;
+}
