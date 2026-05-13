@@ -1,0 +1,430 @@
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.sidebar {
+  width: 220px;
+  background: #eef2ff;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 4px solid #dce3f0;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100px;
+  }
+}
+
+.sidebar-header {
+  padding: 20px 16px;
+}
+
+@media (max-width: 640px) {
+  .sidebar-header {
+    padding: 16px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header {
+    padding: 12px 8px;
+  }
+}
+
+.sidebar-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .sidebar-header h3 {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header h3 {
+    font-size: 10px;
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 8px;
+}
+
+@media (max-width: 640px) {
+  .sidebar-nav {
+    padding: 12px 6px;
+  }
+}
+
+.nav-item {
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #334155;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+@media (max-width: 768px) {
+  .nav-item {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-item {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-item {
+    padding: 5px 6px;
+    font-size: 10px;
+  }
+}
+
+.nav-item:hover {
+  background: #e0e7ff;
+  color: var(--primary);
+}
+
+.nav-item.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.top-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 4px solid #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 12px 20px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .top-bar {
+    padding: 10px 16px;
+    gap: 10px;
+  }
+}
+
+.home-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.home-link img {
+  width: 28px;
+  height: 28px;
+}
+
+@media (max-width: 640px) {
+  .home-link img {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.top-bar h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .top-bar h1 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .top-bar h1 {
+    font-size: 16px;
+  }
+}
+
+.content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+}
+
+@media (max-width: 768px) {
+  .content-scroll {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .content-scroll {
+    padding: 16px;
+  }
+}
+
+.page-content {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 640px) {
+  .form-group {
+    margin-bottom: 16px;
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: monospace;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+@media (max-width: 640px) {
+  textarea {
+    height: 70px;
+  }
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-row textarea {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .input-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.result-footer {
+  flex-shrink: 0;
+  height: 180px;
+  background: #f1f5f9;
+  border-top: 4px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .result-footer {
+    height: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .result-footer {
+    height: 140px;
+  }
+}
+
+.calc-icon {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  z-index: 10;
+  padding: 4px;
+}
+
+.calc-icon:hover {
+  opacity: 0.7;
+}
+
+.calc-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+@media (max-width: 768px) {
+  .calc-icon {
+    top: 6px;
+    right: 14px;
+  }
+  .calc-icon img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .calc-icon {
+    top: 4px;
+    right: 12px;
+  }
+  .calc-icon img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ── 结果展示区 ── */
+.result-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px;
+  padding-right: 70px;
+  font-family: monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+@media (max-width: 768px) {
+  .result-content {
+    padding: 10px 16px;
+    padding-right: 60px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .result-content {
+    padding: 8px 12px;
+    padding-right: 50px;
+    font-size: 11px;
+  }
+}
+
+/* ── 拖拽手柄 ── */
+.resize-handle {
+  flex-shrink: 0;
+  background: transparent;
+  transition: background 0.2s;
+  z-index: 20;
+}
+
+/* 水平拖拽（侧边栏宽度） */
+.resize-handle-h {
+  width: 4px;
+  cursor: col-resize;
+}
+
+/* 垂直拖拽（结果栏高度） */
+.resize-handle-v {
+  height: 4px;
+  cursor: row-resize;
+}
+
+.resize-handle:hover,
+.resize-handle.resize-active {
+  background: var(--primary);
+}
+
+.err {
+  color: var(--text-2);
+  font-size: 12px;
+  margin-top: 6px;
+}

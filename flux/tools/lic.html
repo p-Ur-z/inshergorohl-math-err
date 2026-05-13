@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数值积分</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/tool.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>数值积分</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-menu="integral1">定积分</div>
+          <div class="nav-item" data-menu="integral2">二重积分</div>
+          <div class="nav-item" data-menu="integral3">曲线积分</div>
+          <div class="nav-item" data-menu="integral4">三重积分</div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <a href="../flux.html" class="home-link">
+            <img src="../icons/home.svg" alt="返回主页" />
+          </a>
+          <h1 id="page-title">定积分</h1>
+        </div>
+
+        <div class="content-scroll">
+          <div id="page-integral1" class="page-content">
+            <div class="form-group">
+              <label>被积函数 f(x)</label><input id="f1" value="Math.sin(x)" />
+            </div>
+            <div class="form-group">
+              <label>下限 a</label><input id="a1" value="0" />
+            </div>
+            <div class="form-group">
+              <label>上限 b</label><input id="b1" value="3.14159" />
+            </div>
+            <div class="form-group">
+              <label>分段数 n</label><input id="n1" value="200" />
+            </div>
+            <div class="form-group">
+              <label>方法</label>
+              <select id="m1">
+                <option value="left">左黎曼和</option>
+                <option value="right">右黎曼和</option>
+                <option value="mid">中点黎曼和</option>
+                <option value="trapezoid">梯形法</option>
+                <option value="parabola">抛物线法</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="page-integral2" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>被积函数 f(x,y)</label><input id="f2" value="x*x+y*y" />
+            </div>
+            <div class="form-group">
+              <label>x 下限</label><input id="x1" value="0" />
+            </div>
+            <div class="form-group">
+              <label>x 上限</label><input id="x2" value="1" />
+            </div>
+            <div class="form-group">
+              <label>y 下限</label><input id="y1" value="0" />
+            </div>
+            <div class="form-group">
+              <label>y 上限</label><input id="y2" value="1" />
+            </div>
+            <div class="form-group">
+              <label>分段数 n</label><input id="n2" value="60" />
+            </div>
+          </div>
+
+          <div id="page-integral3" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>x(t)</label><input id="cx" value="Math.cos(t)" />
+            </div>
+            <div class="form-group">
+              <label>y(t)</label><input id="cy" value="Math.sin(t)" />
+            </div>
+            <div class="form-group">
+              <label>t 下限</label><input id="t0" value="0" />
+            </div>
+            <div class="form-group">
+              <label>t 上限</label><input id="t1" value="6.28318" />
+            </div>
+            <div class="form-group">
+              <label>分段数 n</label><input id="nc" value="400" />
+            </div>
+            <div class="form-group">
+              <label>类型</label>
+              <select id="ct">
+                <option value="I">I 类（标量）</option>
+                <option value="II">II 类（向量）</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="page-integral4" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>被积函数 f(x,y,z)</label><input id="f3" value="x+y+z" />
+            </div>
+            <div class="form-group">
+              <label>x 下限</label><input id="tx0" value="0" />
+            </div>
+            <div class="form-group">
+              <label>x 上限</label><input id="tx1" value="1" />
+            </div>
+            <div class="form-group">
+              <label>y 下限</label><input id="ty0" value="0" />
+            </div>
+            <div class="form-group">
+              <label>y 上限</label><input id="ty1" value="1" />
+            </div>
+            <div class="form-group">
+              <label>z 下限</label><input id="tz0" value="0" />
+            </div>
+            <div class="form-group">
+              <label>z 上限</label><input id="tz1" value="1" />
+            </div>
+            <div class="form-group">
+              <label>分段数 n</label><input id="n3" value="40" />
+            </div>
+          </div>
+        </div>
+
+        <div class="result-footer">
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
+          </div>
+          <button class="calc-icon" onclick="handleCalc()">
+            <img src="../icons/calc.svg" alt="计算" />
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../scripts/numerical.js"></script>
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
+    <script>
+      /**
+       * 根据激活菜单分发到对应的积分计算函数
+       */
+      function handleCalc() {
+        const activeItem = document.querySelector(".nav-item.active");
+        const menuId = activeItem.getAttribute("data-menu");
+        if (menuId === "integral1")
+          calc1(); // 定积分
+        else if (menuId === "integral2")
+          calc2(); // 二重积分
+        else if (menuId === "integral3")
+          calcC(); // 曲线积分
+        else if (menuId === "integral4") calc3(); // 三重积分
+      }
+
+      /** 定积分：一维函数 + 区间 + 分段数 + 方法 */
+      function calc1() {
+        const result = definiteIntegral(
+          f1.value,
+          +a1.value,
+          +b1.value,
+          +n1.value,
+          m1.value,
+        );
+        document.getElementById("result-area").innerHTML =
+          `${result.value}<br><span class="err">误差阶：${result.error}</span>`;
+      }
+
+      /** 二重积分：f(x,y) + 矩形区域 + 分段数 */
+      function calc2() {
+        const result = doubleIntegral(
+          f2.value,
+          +x1.value,
+          +x2.value,
+          +y1.value,
+          +y2.value,
+          +n2.value,
+        );
+        document.getElementById("result-area").innerHTML = `结果: ${result}`;
+      }
+
+      /** 曲线积分：参数方程 + 参数区间 + 类型 */
+      function calcC() {
+        const result = curveIntegral(
+          cx.value,
+          cy.value,
+          +t0.value,
+          +t1.value,
+          +nc.value,
+          ct.value,
+        );
+        document.getElementById("result-area").innerHTML = `结果: ${result}`;
+      }
+
+      /** 三重积分：f(x,y,z) + 长方体区域 + 分段数 */
+      function calc3() {
+        const result = tripleIntegral(
+          f3.value,
+          +tx0.value,
+          +tx1.value,
+          +ty0.value,
+          +ty1.value,
+          +tz0.value,
+          +tz1.value,
+          +n3.value,
+        );
+        document.getElementById("result-area").innerHTML = `结果: ${result}`;
+      }
+    </script>
+  </body>
+</html>

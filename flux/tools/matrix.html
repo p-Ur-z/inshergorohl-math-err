@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>线性代数</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/tool.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>线性代数</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-menu="lu">LU分解</div>
+          <div class="nav-item" data-menu="qr">QR分解</div>
+          <div class="nav-item" data-menu="svd">SVD分解</div>
+          <div class="nav-item" data-menu="pow">矩阵幂</div>
+          <div class="nav-item" data-menu="det">行列式</div>
+          <div class="nav-item" data-menu="mul">矩阵乘法</div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <a href="../flux.html" class="home-link">
+            <img src="../icons/home.svg" alt="返回主页" />
+          </a>
+          <h1 id="page-title">LU分解</h1>
+        </div>
+
+        <div class="content-scroll">
+          <div id="page-lu" class="page-content">
+            <div class="form-group">
+              <label>矩阵 A</label
+              ><textarea id="lu_input">
+2 1
+1 2</textarea
+              >
+            </div>
+          </div>
+          <div id="page-qr" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>矩阵 A</label
+              ><textarea id="qr_input">
+1 1
+1 0
+0 1</textarea
+              >
+            </div>
+          </div>
+          <div id="page-svd" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>矩阵 A</label
+              ><textarea id="svd_input">
+1 0
+0 2</textarea
+              >
+            </div>
+          </div>
+          <div id="page-pow" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>矩阵 A</label
+              ><textarea id="pow_input">
+2 0
+0 2</textarea
+              >
+            </div>
+            <div class="form-group">
+              <label>幂次 n</label><input id="pow_n" type="number" value="-1" />
+            </div>
+          </div>
+          <div id="page-det" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>矩阵 A</label
+              ><textarea id="det_input">
+1 2
+3 4</textarea
+              >
+            </div>
+          </div>
+          <div id="page-mul" class="page-content" style="display: none">
+            <div class="form-group">
+              <label>矩阵 A</label
+              ><textarea id="matA">
+1 2
+3 4</textarea
+              >
+            </div>
+            <div class="form-group">
+              <label>矩阵 B</label
+              ><textarea id="matB">
+5 6
+7 8</textarea
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="result-footer">
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
+          </div>
+          <button class="calc-icon" onclick="handleCalc()">
+            <img src="../icons/calc.svg" alt="计算" />
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../scripts/linear.js"></script>
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
+    <script>
+      /**
+       * 根据激活菜单分发到对应的矩阵运算函数
+       */
+      function handleCalc() {
+        const activeItem = document.querySelector(".nav-item.active");
+        const menuId = activeItem.getAttribute("data-menu");
+        if (menuId === "lu") calcLU();
+        else if (menuId === "qr") calcQR();
+        else if (menuId === "svd") calcSVD();
+        else if (menuId === "pow") calcPow();
+        else if (menuId === "det") calcDet();
+        else if (menuId === "mul") calcMul();
+      }
+
+      /** LU 分解：读取矩阵，显示 L 和 U */
+      function calcLU() {
+        const A = getMatrix("lu_input");
+        const { L, U } = computeLU(A);
+        document.getElementById("result-area").innerHTML =
+          "L =\n" + printMatrix(L) + "\n\nU =\n" + printMatrix(U);
+      }
+
+      /** QR 分解：读取矩阵，显示 Q 和 R */
+      function calcQR() {
+        const A = getMatrix("qr_input");
+        const { Q, R } = computeQR(A);
+        document.getElementById("result-area").innerHTML =
+          "Q =\n" + printMatrix(Q) + "\n\nR =\n" + printMatrix(R);
+      }
+
+      /** SVD 分解（简化演示） */
+      function calcSVD() {
+        const A = getMatrix("svd_input");
+        const result = computeSVD(A);
+        document.getElementById("result-area").innerHTML = result;
+      }
+
+      /** 矩阵幂：读取矩阵和幂次 n，计算 Aⁿ */
+      function calcPow() {
+        const A = getMatrix("pow_input");
+        const n = parseInt(document.getElementById("pow_n").value);
+        const result = computePow(A, n);
+        if (result.error) {
+          document.getElementById("result-area").innerHTML = result.error;
+        } else {
+          document.getElementById("result-area").innerHTML =
+            "Aⁿ =\n" + printMatrix(result);
+        }
+      }
+
+      /** 行列式：读取矩阵，计算 det(A) */
+      function calcDet() {
+        const A = getMatrix("det_input");
+        const det = computeDet(A);
+        if (det.error) {
+          document.getElementById("result-area").innerHTML = det.error;
+        } else {
+          document.getElementById("result-area").innerHTML = det.toFixed(4);
+        }
+      }
+
+      /** 矩阵乘法：读取两个矩阵，计算 A × B */
+      function calcMul() {
+        const A = getMatrix("matA");
+        const B = getMatrix("matB");
+        const C = computeMul(A, B);
+        if (C.error) {
+          document.getElementById("result-area").innerHTML = C.error;
+        } else {
+          document.getElementById("result-area").innerHTML =
+            "A × B =\n" + printMatrix(C);
+        }
+      }
+    </script>
+  </body>
+</html>

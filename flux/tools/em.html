@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>欧拉折线法</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/tool.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>欧拉折线法</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-menu="euler">欧拉折线法</div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <a href="../flux.html" class="home-link">
+            <img src="../icons/home.svg" alt="返回主页" />
+          </a>
+          <h1 id="page-title">欧拉折线法</h1>
+        </div>
+
+        <div class="content-scroll">
+          <div id="page-euler" class="page-content">
+            <div class="form-group">
+              <label>微分方程 \(\frac{dy}{dx} = f(x, y)\)</label>
+              <input id="func" value="x + y" placeholder="例如：x + y 或 x*y" />
+            </div>
+            <div class="form-group">
+              <label>初始条件 \(x_0\)</label>
+              <input id="x0" type="number" value="0" />
+            </div>
+            <div class="form-group">
+              <label>初始条件 \(y_0\)</label>
+              <input id="y0" type="number" value="1" />
+            </div>
+            <div class="form-group">
+              <label>步长 \(h\)</label>
+              <input id="h" type="number" value="0.1" step="0.01" />
+            </div>
+            <div class="form-group">
+              <label>终点 \(x_n\)</label>
+              <input id="xn" type="number" value="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="result-footer">
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
+          </div>
+          <button class="calc-icon" onclick="calcEuler()">
+            <img src="../icons/calc.svg" alt="计算" />
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../scripts/euler.js"></script>
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
+    <script>
+      /**
+       * 读取欧拉折线法的输入参数，执行计算并显示结果表格
+       */
+      function calcEuler() {
+        try {
+          const funcExpr = document.getElementById("func").value;
+          const x0 = parseFloat(document.getElementById("x0").value);
+          const y0 = parseFloat(document.getElementById("y0").value);
+          const h = parseFloat(document.getElementById("h").value);
+          const xn = parseFloat(document.getElementById("xn").value);
+          // 调用 euler.js 中的核心函数
+          const result = eulerMethod(funcExpr, x0, y0, h, xn);
+          document.getElementById("result-area").innerText = result;
+        } catch (e) {
+          document.getElementById("result-area").innerText =
+            "错误：请输入有效的函数表达式（如 x + y）。";
+        }
+      }
+    </script>
+  </body>
+</html>

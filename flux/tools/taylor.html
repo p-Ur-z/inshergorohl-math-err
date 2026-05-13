@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>泰勒展开</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/theme.css" />
+    <link rel="stylesheet" href="../styles/tool.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>泰勒展开</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-item active" data-menu="taylor">泰勒展开</div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="top-bar">
+          <a href="../flux.html" class="home-link">
+            <img src="../icons/home.svg" alt="返回主页" />
+          </a>
+          <h1 id="page-title">泰勒展开</h1>
+        </div>
+
+        <div class="content-scroll">
+          <div id="page-taylor" class="page-content">
+            <div class="form-group">
+              <label>函数</label>
+              <select id="func">
+                <option value="sin">sin(x)</option>
+                <option value="cos">cos(x)</option>
+                <option value="tan">tan(x)</option>
+                <option value="arcsin">arcsin(x)</option>
+                <option value="Si">Si(x)</option>
+                <option value="Ci" selected>Ci(x)</option>
+                <option value="Ei">Ei(x)</option>
+                <option value="Li">Li(x)</option>
+                <option value="erf">erf(x)</option>
+                <option value="exp">exp(x)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>自变量 \(x_0\)</label>
+              <input id="x0" value="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="result-footer">
+          <div class="result-content" id="result-area">
+            计算结果将呈现于此处
+          </div>
+          <button class="calc-icon" onclick="calc()">
+            <img src="../icons/calc.svg" alt="计算" />
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="../scripts/taylor.js"></script>
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/mathjax-config.js"></script>
+    <script src="../scripts/resize.js"></script>
+    <script>
+      /**
+       * 泰勒展开计算：读取函数名和自变量，计算并显示结果
+       */
+      function calc() {
+        const name = document.getElementById("func").value;
+        const x = parseFloat(document.getElementById("x0").value);
+        // 输入校验
+        if (isNaN(x)) {
+          document.getElementById("result-area").innerText =
+            "error: 请输入有效数字";
+          return;
+        }
+        // 调用 taylor.js 中的核心函数
+        const result = computeTaylor(name, x);
+        document.getElementById("result-area").innerText =
+          `${name}(${x}) = ${result.toFixed(8)}`;
+      }
+    </script>
+  </body>
+</html>
